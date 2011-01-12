@@ -95,7 +95,7 @@ public class AndEngineBoard {
     public Long getWidth() {
         return mWidth;
     }
-    
+      
     /**
      * Getter
      * @return
@@ -103,6 +103,7 @@ public class AndEngineBoard {
     public Long getHeight() {
         return mHeight;
     }
+    
     
     /**
      * Returns canvas position from board position
@@ -122,14 +123,22 @@ public class AndEngineBoard {
      * Returns board position from canvas position
      */
     public int getBoardYfromXCoord(float x){
-        return (int)((x - mHOrizontalPadding + (mXDistance / 2)) / mXDistance ); 
+        int res = (int)((x - mHOrizontalPadding + (mXDistance / 2)) / mXDistance );
+        if(res >= mWidth){
+            res = mWidth.intValue() - 1;
+        }
+        return res;
     }
     
     /**
      * Returns board position from canvas position
      */
     public int getBoardXfromYCoord(float y){
-        return (int)((y- mVerticalPadding + mDistanceFromBottom + (mYDistance / 2)) / mYDistance )  ; 
+        int res = (int)((y- mVerticalPadding + mDistanceFromBottom + (mYDistance / 2)) / mYDistance )  ;
+        if(res >= mHeight){
+            res = mHeight.intValue() - 1;
+        }
+        return res;
     }
     
     
@@ -252,7 +261,7 @@ public class AndEngineBoard {
         
         if(j > 1){
             nearCell = mBoard[i][j - 1];
-            farCell = mBoard[j][j - 2];
+            farCell = mBoard[i][j - 2];
             if(canMoveBall(nearCell, farCell)){
                 return true;
             }

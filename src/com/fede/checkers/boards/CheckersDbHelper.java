@@ -50,7 +50,7 @@ public class CheckersDbHelper extends CheckersStorage {
     }
     
     public static void setLastBoardUsed(String boardName, Context ctx){
-        int mode = Activity.MODE_PRIVATE;
+        int mode = Context.MODE_PRIVATE;
         SharedPreferences mySharedPreferences = ctx.getSharedPreferences(PREF_NAME, mode);        
         SharedPreferences.Editor editor = mySharedPreferences.edit();   
         editor.putString(LAST_BOARD_USED, boardName);

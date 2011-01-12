@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -67,8 +68,8 @@ public class ChineseCheckers extends BaseGameActivity {
     private Boolean mLoadSaved;
     private AndEngineBoard mBoard;
     private Boolean mFinishing;
-    private int mCameraWidth = 450;
-    private int mCameraHeight = 640;
+    private int mCameraWidth = 270;
+    private int mCameraHeight = 0;
 
     private TextureRegion mBackgroundRegion;
 
@@ -205,7 +206,7 @@ public class ChineseCheckers extends BaseGameActivity {
 
         final AdView adView = new AdView(this);
         adView.refreshDrawableState();
-        adView.setVisibility(AdView.VISIBLE);
+        adView.setVisibility(View.VISIBLE);
         adView.requestFreshAd();
         adView.setRequestInterval(30);
 

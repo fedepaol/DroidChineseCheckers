@@ -82,6 +82,7 @@ public class FillableBoardCell extends BoardCell {
         mSprite = b;        
     }
     
+    @Override
     public Boolean hasBall(){
         return mFilled;
     }

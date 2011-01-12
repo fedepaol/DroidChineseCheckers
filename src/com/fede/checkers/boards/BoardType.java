@@ -65,10 +65,10 @@ public abstract class BoardType {
         Cursor saved = db.getSavedBoard(getName());
         if(saved.getCount() > 0){
             rowId = saved.getLong(0);
-            mSavedDump =  saved.getString(CheckersDbHelper.BOARD_DUMP_COLUMN);
+            mSavedDump =  saved.getString(CheckersStorage.BOARD_DUMP_COLUMN);
             mLoaded = true;
-            this.mSavedDate = new Date(saved.getInt(CheckersDbHelper.BOARD_SAVEDDATE_COLUMN)); 
-            maxScore = saved.getLong(CheckersDbHelper.BOARD_SAVEDDATE_COLUMN); // TODO
+            this.mSavedDate = new Date(saved.getInt(CheckersStorage.BOARD_SAVEDDATE_COLUMN)); 
+            maxScore = saved.getLong(CheckersStorage.BOARD_SAVEDDATE_COLUMN); // TODO
             return true;
         }
         return false;       
@@ -105,8 +105,8 @@ public abstract class BoardType {
         if(name.equals(BoardClassic.NAME)){
             return new BoardClassic();
         }
-        if(name.equals(BoardSimple.NAME)){
-            return new BoardSimple();
+        if(name.equals(RealBoardClassic.NAME)){
+            return new RealBoardClassic();
         }
         if(name.equals(BoardStar.NAME)){
             return new BoardStar();
@@ -117,7 +117,7 @@ public abstract class BoardType {
     public static ArrayList<BoardType> getAllBoards(){
         ArrayList<BoardType> res = new ArrayList<BoardType>();
         res.add(getBoardFromName(BoardClassic.NAME));
-        res.add(getBoardFromName(BoardSimple.NAME));
+        res.add(getBoardFromName(RealBoardClassic.NAME));
         res.add(getBoardFromName(BoardStar.NAME));
 
         return res;

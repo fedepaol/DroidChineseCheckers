@@ -63,6 +63,11 @@ public class FilledBoardCell extends BoardCell{
         // TODO Auto-generated method stub
         
     }
+    
+    @Override
+    public Boolean fillableBall(){
+        return false;
+    }
 
     @Override
     public char getEncoding() {
