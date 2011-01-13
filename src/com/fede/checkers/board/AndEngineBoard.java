@@ -38,7 +38,7 @@ public class AndEngineBoard {
     private final ChineseCheckers mGame;
     private  float mVerticalPadding = 0;
     private  float mHOrizontalPadding = 0;
-    private float mDistanceFromBottom = 50;
+    private float mDistanceFromBottom = 10;
     private final float mYDistance, mXDistance;
     
     private  BoardCell[][] mBoard;

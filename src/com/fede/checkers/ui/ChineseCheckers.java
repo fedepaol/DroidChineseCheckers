@@ -68,7 +68,7 @@ public class ChineseCheckers extends BaseGameActivity {
     private Boolean mLoadSaved;
     private AndEngineBoard mBoard;
     private Boolean mFinishing;
-    private int mCameraWidth = 270;
+    private int mCameraWidth = 265;
     private int mCameraHeight = 0;
 
     private TextureRegion mBackgroundRegion;
