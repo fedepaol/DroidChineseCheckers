@@ -34,7 +34,8 @@ public class CheckersDbHelper extends CheckersStorage {
                     BOARD_DUMP_KEY,
                     BOARD_SAVEDDATE_KEY,
                     BOARD_WIDTH_KEY,
-                    BOARD_HEIGTH_KEY}, BOARD_NAME_KEY + " = '" + name + "'", null, null, null, null);
+                    BOARD_HEIGTH_KEY,
+                    BOARD_SCORE_KEY}, BOARD_NAME_KEY + " = '" + name + "'", null, null, null, null);
         if(res != null){
             res.moveToFirst();
         }

@@ -43,7 +43,7 @@ public abstract class BoardCell{
     public abstract Sprite getBallSprite();
     public abstract void eraseBallSprite();
     public abstract void setBallSprite(Sprite b);
-    public abstract void buildSprites(CheckersSpriteFactory f, Scene s, AndEngineBoard b);
+    public abstract void buildSprites(CheckersSpriteFactory f, Scene s, AndEngineBoard b, float size);
     public abstract char getEncoding();
     
     public Boolean hasBall(){

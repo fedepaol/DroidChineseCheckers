@@ -21,6 +21,11 @@ public class Constants {
     public static final int BALL_SIZE = 32;
     public static final int BALL_DISTANCE = BALL_SIZE + BALL_SIZE / 10;
     
+    public static final int HOLE_LAYER = 0;
+    public static final int BALL_LAYER = 1;
+    public static final int SCORE_LAYER = 2;
+    
+    
     public static final String BOARD_NAME_INTENT = "com.checkers.BOARD_NAME";
     public static final String BOARD_RESTORE_INTENT = "com.checkers.BOARD_RESTORE";
 }

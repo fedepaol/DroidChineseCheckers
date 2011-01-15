@@ -14,7 +14,8 @@
  * limitations under the License.
  ******************************************************************************/
 package com.fede.checkers.board;
-import com.fede.checkers.ui.*;
+import com.fede.checkers.Constants;
+import com.fede.checkers.ui.CheckersSpriteFactory;
 
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
@@ -53,16 +54,24 @@ public class FillableBoardCell extends BoardCell {
         }
         mFilled = true;
     }
+    
+    private float getScale(Sprite s, float newSize){
+        float actualSize = s.getWidth();
+        return newSize / actualSize;
+    }
 
     @Override
-    public void buildSprites(CheckersSpriteFactory f, Scene s, AndEngineBoard b) {
+    public void buildSprites(CheckersSpriteFactory f, Scene s, AndEngineBoard b, float size) {
         
-        Sprite hole = f.getHoleSprite(x, y, b);
-        s.getBottomLayer().addEntity(hole);
+        Sprite hole = f.getHoleSprite(x, y, b, size);
+        s.getLayer(Constants.HOLE_LAYER).addEntity(hole);
+        float scale = getScale(hole, size);
+        //hole.setScale(scale);
         
         if(mFilled){
-            mSprite = f.getBallSprite(x, y, b);
-            s.getTopLayer().addEntity(mSprite);
+            mSprite = f.getBallSprite(x, y, b, size);
+            s.getLayer(Constants.BALL_LAYER).addEntity(mSprite);
+            //mSprite.setScale(scale);
             s.registerTouchArea(mSprite);
         }
     }

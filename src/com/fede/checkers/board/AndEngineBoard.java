@@ -34,17 +34,23 @@ public class AndEngineBoard {
         
     }
     
-    
+    static final float BALL_DISTANCE_FACTOR = 10;
+    static final float PADDING_FACTOR = 10;
+
     private final ChineseCheckers mGame;
-    private  float mVerticalPadding = 0;
-    private  float mHOrizontalPadding = 0;
-    private float mDistanceFromBottom = 10;
-    private final float mYDistance, mXDistance;
+    private  float mVerticalPadding = 0;    // Vertical Padding
+    private  float mHorizontalPadding = 0;  // Horizontal Padding
+    private float mDistanceFromBottom = 10;  // Extra offset from bottom
+    private float mBallSize;
+    private float mBallPadding;     // distance between the side of two balls
+    private float mYDistance, mXDistance; // Distance between the center of two balls 
     
     private  BoardCell[][] mBoard;
     private  Long mWidth;
     private  Long mHeight;
     private final Scene mScene;
+    
+    private long mScore = 0;
 
     
     /**
@@ -81,7 +87,7 @@ public class AndEngineBoard {
             for(int j = 0; j < height; j++){
                 char c = dump.charAt(i * width + j);
                 mBoard[i][j] = fillCellFromChar(i, j, c);
-                mBoard[i][j].buildSprites(f, mScene, this);
+                mBoard[i][j].buildSprites(f, mScene, this, this.mBallSize);
             }
         }  
     }
@@ -109,21 +115,27 @@ public class AndEngineBoard {
      * Returns canvas position from board position
      */
     public float getYCoordFromBoardX(int x){
-        return (mYDistance * x) + mVerticalPadding - mDistanceFromBottom;
+        return (mBallSize / 2) + mBallPadding + mYDistance * x + mVerticalPadding - mDistanceFromBottom;
     }
     
     /**
      * Returns canvas position from board position
+     * 
+     * PADDING | o | o | PADDING
+     * 
+     * It must be padding + half ball + ball padding + y times (ball distance)
      */
     public float getXCoordFromBoardY(int y){
-        return (mXDistance * y) + mHOrizontalPadding;
+        return (mBallSize / 2) + mBallPadding + mXDistance * y + mHorizontalPadding;
     }
     
     /**
      * Returns board position from canvas position
+     * 
+     * The formula is not EXACTLY the reversed one because I need to catch the second half of the ball as well
      */
     public int getBoardYfromXCoord(float x){
-        int res = (int)((x - mHOrizontalPadding + (mXDistance / 2)) / mXDistance );
+      int res = (int)((x - mHorizontalPadding - mBallSize / 2 - mBallPadding + mBallSize / 2) / mXDistance);
         if(res >= mWidth){
             res = mWidth.intValue() - 1;
         }
@@ -134,7 +146,9 @@ public class AndEngineBoard {
      * Returns board position from canvas position
      */
     public int getBoardXfromYCoord(float y){
-        int res = (int)((y- mVerticalPadding + mDistanceFromBottom + (mYDistance / 2)) / mYDistance )  ;
+        int res = (int)((y - mVerticalPadding + mDistanceFromBottom -  mBallSize / 2 - mBallPadding + mBallSize / 2) / mYDistance);
+
+        
         if(res >= mHeight){
             res = mHeight.intValue() - 1;
         }
@@ -193,19 +207,43 @@ public class AndEngineBoard {
             @Override
             public void run() {                
                 mScene.unregisterTouchArea(toDel);
-                mScene.getTopLayer().removeEntity(toDel);                
+                mScene.getLayer(Constants.BALL_LAYER).removeEntity(toDel);                
             }
         });
         
-        if(checkStall()){
-            mGame.onGameStall();
-        }
+        postMoveOperations();
+        
+        
         
     }
     
 
-    
-    
+    /**
+     * Sets sprite sizes according to screen size an ball numbers
+     * @param ballNum
+     * @param width
+     * @param height
+     * 
+     * The board is built in this way:
+     * | = pall padding
+     * o = ball size
+     * 
+     * PADDING | o | o | PADDING
+     * 
+     * ball padding is ballsize / BALL_DISTANCE_FACTOR
+     * horizontal padding is a fraction of width
+     */
+    private void setSizes(int ballNum, float width, float height){
+        mHorizontalPadding = ((float)width) / PADDING_FACTOR; 
+        
+        
+        mBallSize  = (width - 2 * mHorizontalPadding) / (ballNum + (ballNum + 1) / BALL_DISTANCE_FACTOR );        
+        mBallPadding = mBallSize / BALL_DISTANCE_FACTOR;
+        mYDistance = (float) ( mBallSize + mBallPadding);
+        mXDistance = mYDistance;
+        
+        mVerticalPadding = (height - mYDistance * (mWidth - 1)) / 2;  
+    }
     
     public AndEngineBoard(int width, int height, BoardType b, Boolean buildFromSaved, Scene s, CheckersSpriteFactory f, ChineseCheckers game){
         mScene = s;
@@ -213,15 +251,13 @@ public class AndEngineBoard {
         mHeight = Long.valueOf(b.getHeight());
         mWidth = Long.valueOf(b.getWidth());
         
-        mYDistance = Constants.BALL_DISTANCE;
-        mXDistance = Constants.BALL_DISTANCE;
-        
-        mVerticalPadding = (height - mYDistance * (mWidth - 1)) / 2;  
-        mHOrizontalPadding = (width - mXDistance * (mHeight - 1)) / 2;
-        
+        int ballNum = b.getWidth();
+
+        setSizes(ballNum, width, height);
 
         if(buildFromSaved && b.load(game)){
             this.buildFromString(b.getSavedDump(), f, b.getWidth(), b.getHeight());
+            game.updateScore(mScore);
         }else{
             this.buildFromString(b.getDump(), f, b.getWidth(), b.getHeight());
         }
@@ -241,6 +277,10 @@ public class AndEngineBoard {
      * Says if the ball in i,j position can be moved
      */
     private Boolean canMove(int i, int j){
+        if(!mBoard[i][j].hasBall()){
+            return false;
+        }
+        
         BoardCell nearCell;
         BoardCell farCell;
         if(i > 1){
@@ -284,15 +324,20 @@ public class AndEngineBoard {
      * Says if more moves are available
      * @return
      */
-    public Boolean checkStall(){
+    public void postMoveOperations(){
+        mScore++;
+        mGame.updateScore(mScore);
+        
         for(int i = 0; i < mBoard.length; i++){
             for(int j = 0; j < mBoard[i].length; j++){
-                if(mBoard[i][j].hasBall() && canMove(i, j)){
-                    return false;
+                if(canMove(i, j)){  // checks if at least one ball can be moved
+                    return;
                 }
             }
         }
-        return true;
+            
+        mGame.onGameStall();
+        return;
     }
     
     
@@ -314,6 +359,10 @@ public class AndEngineBoard {
     
     public ChineseCheckers getGame() {
         return mGame;
+    }
+    
+    public long getScore(){
+        return mScore;
     }
     
     

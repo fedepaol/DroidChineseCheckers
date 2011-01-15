@@ -46,11 +46,7 @@ public class FilledBoardCell extends BoardCell{
         return null;
     }
 
-    @Override
-    public void buildSprites(CheckersSpriteFactory f, Scene s, AndEngineBoard b) {
-        // TODO Auto-generated method stub
-        
-    }
+
 
     @Override
     public void eraseBallSprite() {
@@ -72,6 +68,12 @@ public class FilledBoardCell extends BoardCell{
     @Override
     public char getEncoding() {
         return '0';
+    }
+
+    @Override
+    public void buildSprites(CheckersSpriteFactory f, Scene s, AndEngineBoard b, float size) {
+        // TODO Auto-generated method stub
+        
     }
     
 }

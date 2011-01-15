@@ -25,7 +25,7 @@ import java.util.Date;
 public abstract class BoardType {
     String mSavedDump;
     Date mSavedDate;
-    Long maxScore;
+    Long mScore;
     Long rowId;
     Boolean mLoaded = false;
     
@@ -35,17 +35,19 @@ public abstract class BoardType {
     public abstract int getImageResource();
     public abstract String getName();
     
-    public void saveDump(String dump, Context ctx){
+    public void saveDump(String dump, long score, Context ctx){
         CheckersDbHelper db = new CheckersDbHelper(ctx);
         db.open();
         Cursor saved = db.getSavedBoard(getName());
         if(saved.getCount() > 0){
             db.updateBoard(saved.getLong(0), 
                     getName(), dump, new Date(), Long.valueOf(getWidth()), 
-                    Long.valueOf(getHeight()));
+                    Long.valueOf(getHeight()),
+                    Long.valueOf(score));
         }else{
             db.addBoard(getName(), dump, new Date(), Long.valueOf(getWidth()), 
-                    Long.valueOf(getHeight()));
+                    Long.valueOf(getHeight()),
+                    Long.valueOf(score));
         }
         db.close();
         
@@ -67,8 +69,8 @@ public abstract class BoardType {
             rowId = saved.getLong(0);
             mSavedDump =  saved.getString(CheckersStorage.BOARD_DUMP_COLUMN);
             mLoaded = true;
-            this.mSavedDate = new Date(saved.getInt(CheckersStorage.BOARD_SAVEDDATE_COLUMN)); 
-            maxScore = saved.getLong(CheckersStorage.BOARD_SAVEDDATE_COLUMN); // TODO
+            mSavedDate = new Date(saved.getInt(CheckersStorage.BOARD_SAVEDDATE_COLUMN)); 
+            mScore = saved.getLong(CheckersStorage.BOARD_SCORE_COLUMN); 
             return true;
         }
         return false;       

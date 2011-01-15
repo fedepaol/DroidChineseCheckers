@@ -47,17 +47,30 @@ public class CheckersSpriteFactory {
     }
     
 
-    
-    public Sprite getHoleSprite(int x, int y, AndEngineBoard b){
+    /**
+     * Returns a hole sprite 
+     * @param x x position
+     * @param y x position
+     * @param b board to put the sprite on
+     * @param size size of the sprite
+     */
+    public Sprite getHoleSprite(int x, int y, AndEngineBoard b, float size){
         return new BoardSprite(x,
                           y,
                           mHoleRegion, 
-                          b);
+                          b, size, size);
     }
     
-    public Sprite getBallSprite(int x, int y, AndEngineBoard b){
+    /**
+     * Returns a ball sprite 
+     * @param x x position
+     * @param y x position
+     * @param b board to put the sprite on
+     * @param size size of the sprite
+     */
+    public Sprite getBallSprite(int x, int y, AndEngineBoard b, float size){
         return new BallSprite(x,
                               y,                 
-                              mBallRegion, b);
+                              mBallRegion, b, size, size);
     }
 }

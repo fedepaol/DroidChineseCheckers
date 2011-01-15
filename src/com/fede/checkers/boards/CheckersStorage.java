@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class CheckersStorage{
     private static final String DATABASE_NAME = "CheckersStorageDb.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
 
     // Variable to hold the database instance
@@ -50,6 +50,8 @@ public class CheckersStorage{
 	 static final int BOARD_WIDTH_COLUMN = 4;
 	 static final String BOARD_HEIGTH_KEY = "Heigth";
 	 static final int BOARD_HEIGTH_COLUMN = 5;
+	 static final String BOARD_SCORE_KEY = "Score";
+	 static final int BOARD_SCORE_COLUMN = 6;
 	 static final String BOARD_ROW_ID = "_id";
 
 
@@ -61,14 +63,15 @@ public class CheckersStorage{
 				 BOARD_NAME_KEY + " text "+ ", " + 
 				 BOARD_DUMP_KEY + " text "+ ", " + 
 				 BOARD_SAVEDDATE_KEY + " integer "+ ", " + 
-				 BOARD_WIDTH_KEY + " integer "+ ", " + 
-				 BOARD_HEIGTH_KEY + " integer " + ");";
+				 BOARD_WIDTH_KEY + " integer "+ ", " +
+				 BOARD_HEIGTH_KEY + " integer "+ ", " +
+				 BOARD_SCORE_KEY + " integer " + ");";
 
 
 
 
 	// -------------- BOARD HELPERS ------------------
-	public long addBoard(String Name,String Dump,Date SavedDate,Long Width,Long Heigth)
+	public long addBoard(String Name,String Dump,Date SavedDate,Long Width,Long Heigth, Long Score)
 	{
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(BOARD_NAME_KEY, Name);
@@ -76,11 +79,12 @@ public class CheckersStorage{
 		contentValues.put(BOARD_SAVEDDATE_KEY, SavedDate.getTime());
 		contentValues.put(BOARD_WIDTH_KEY, Width);
 		contentValues.put(BOARD_HEIGTH_KEY, Heigth);
+		contentValues.put(BOARD_SCORE_KEY, Score);
 		return db.insert(BOARD_TABLE, null, contentValues);
 	
 	}
 
-	public long updateBoard(long _rowIndex, String Name,String Dump,Date SavedDate,Long Width,Long Heigth)
+	public long updateBoard(long _rowIndex, String Name,String Dump,Date SavedDate,Long Width,Long Heigth, Long Score)
 	{
 		String where = BOARD_ROW_ID+ " = " + _rowIndex;
 		ContentValues contentValues = new ContentValues();
@@ -89,6 +93,7 @@ public class CheckersStorage{
 		contentValues.put(BOARD_SAVEDDATE_KEY, SavedDate.getTime());
 		contentValues.put(BOARD_WIDTH_KEY, Width);
 		contentValues.put(BOARD_HEIGTH_KEY, Heigth);
+        contentValues.put(BOARD_SCORE_KEY, Score);
 		return db.update(BOARD_TABLE, contentValues, where, null);
 	
 	}
@@ -110,7 +115,8 @@ public class CheckersStorage{
 					BOARD_DUMP_KEY,
 					BOARD_SAVEDDATE_KEY,
 					BOARD_WIDTH_KEY,
-					BOARD_HEIGTH_KEY}, null, null, null, null, null);
+					BOARD_HEIGTH_KEY,
+                    BOARD_SCORE_KEY}, null, null, null, null, null);
 	}
 
 	public Cursor getBoard(long _rowIndex)
@@ -120,7 +126,8 @@ public class CheckersStorage{
 					BOARD_DUMP_KEY,
 					BOARD_SAVEDDATE_KEY,
 					BOARD_WIDTH_KEY,
-					BOARD_HEIGTH_KEY}, BOARD_ROW_ID + " = " + _rowIndex, null, null, null, null);
+					BOARD_HEIGTH_KEY,
+                    BOARD_SCORE_KEY}, BOARD_ROW_ID + " = " + _rowIndex, null, null, null, null);
 		if(res != null){
 			res.moveToFirst();
 		}

@@ -22,6 +22,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -46,13 +47,18 @@ import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolic
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.SpriteBackground;
 import org.anddev.andengine.entity.sprite.Sprite;
+import org.anddev.andengine.entity.text.ChangeableText;
 import org.anddev.andengine.entity.util.FPSLogger;
+import org.anddev.andengine.opengl.font.Font;
+import org.anddev.andengine.opengl.font.FontFactory;
 import org.anddev.andengine.opengl.texture.Texture;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.opengl.view.RenderSurfaceView;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
+
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Main activity class. It implements the real game
@@ -70,6 +76,11 @@ public class ChineseCheckers extends BaseGameActivity {
     private Boolean mFinishing;
     private int mCameraWidth = 265;
     private int mCameraHeight = 0;
+    
+    private ChangeableText mScoreText;    
+    private Texture mFontTexture;
+    private Font mFont;
+
 
     private TextureRegion mBackgroundRegion;
 
@@ -110,6 +121,10 @@ public class ChineseCheckers extends BaseGameActivity {
 
         mBackgroundRegion  = TextureRegionFactory.createFromAsset(texture, this, "gfx/back.png", 0, 0);
         mEngine.getTextureManager().loadTexture(texture);
+        
+        FontFactory.setAssetBasePath("font/");
+        this.mFontTexture = new Texture(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        this.mFont = FontFactory.createFromAsset(this.mFontTexture, this, "Plok.ttf", 32, true, Color.WHITE);
 
 
     }
@@ -118,13 +133,18 @@ public class ChineseCheckers extends BaseGameActivity {
     public Scene onLoadScene() {
         this.mEngine.registerUpdateHandler(new FPSLogger());
 
-        final Scene scene = new Scene(2);
+        final Scene scene = new Scene(3);
         
         Sprite back = new Sprite(0, 0, mBackgroundRegion);
         scene.setBackground(new SpriteBackground(back));
         
         mBoard = new AndEngineBoard(mCameraWidth, mCameraHeight, mBoardType, mLoadSaved, scene, mSpriteFactory, this);        
         scene.setTouchAreaBindingEnabled(true);
+        
+        this.mScoreText = new ChangeableText(5, 5, this.mFont, "Score: 0", "Score: XXXX".length());
+        this.mScoreText.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        this.mScoreText.setAlpha(0.5f);
+        //scene.getLayer(Constants.SCORE_LAYER).addEntity(this.mScoreText);
 
         return scene;
     }
@@ -137,7 +157,7 @@ public class ChineseCheckers extends BaseGameActivity {
     @Override
     protected void onPause() {
         if(!mFinishing){
-            mBoardType.saveDump(mBoard.serialize(), this);
+            mBoardType.saveDump(mBoard.serialize(), mBoard.getScore(), this);
             CheckersDbHelper.setLastBoardUsed(mBoardType.getName(), this);
         }
         super.onPause();
@@ -245,6 +265,10 @@ public class ChineseCheckers extends BaseGameActivity {
 
     protected void setTestMode(boolean testMode) {
         this.testMode = testMode;
+    }
+
+    public void updateScore(long mScore) {
+       // mScoreText.setText(String.valueOf(mScore));      
     }
 
 

@@ -26,8 +26,8 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 public class BallSprite extends BoardSprite {
     private int baseBoardX, baseBoardY;
     
-    public BallSprite(int pX, int pY, TextureRegion pTextureRegion, AndEngineBoard b) {
-        super(pX, pY, pTextureRegion, b);
+    public BallSprite(int pX, int pY, TextureRegion pTextureRegion, AndEngineBoard b, float width, float height) {
+        super(pX, pY, pTextureRegion, b, width, height);
         baseBoardX = 0;
         baseBoardY = 0;
     }
