@@ -194,12 +194,14 @@ public class ChineseCheckers extends BaseGameActivity {
         String button1String = getString(R.string.new_game); 
         String cancelString = getString(R.string.back);
         AlertDialog.Builder ad = new AlertDialog.Builder(this); 
-        ad.setTitle(getString(R.string.stall));
+        
         
         int oldScore = getOldScore();
         if(thisGameScore > oldScore){
+            ad.setTitle(getString(R.string.new_record));
             ad.setMessage(String.format(getString(R.string.no_more_moves_record), thisGameScore, oldScore));
         }else{
+            ad.setTitle(getString(R.string.stall));
             ad.setMessage(String.format(getString(R.string.no_more_moves), thisGameScore));
         }
         

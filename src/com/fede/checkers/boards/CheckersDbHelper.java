@@ -77,7 +77,7 @@ public class CheckersDbHelper extends CheckersStorage {
         res.moveToFirst();
         if(res.getCount() <= 0){
             res.close();
-            return 9;
+            return 0;
         }
         
         int result = res.getInt(BOARDSCORE_MAXSCORE_COLUMN);
