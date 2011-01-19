@@ -19,18 +19,18 @@ import android.R;
 
 
 
-public class RealBoardClassic extends BoardType {
-    public final static String NAME = "RealClassic";
+public class BoardClassicEng extends BoardType {
+    public final static String NAME = "French style";
     
     
     private final char[][] map = {   
             
             {'0','0', '1', '1', '1','0','0'},
-            {'0','0', '1', '1', '1','0','0'},
-            {'1','1', '1', '1', '1','1','1'},
+            {'0','1', '1', '1', '1','1','0'},
             {'1','1', '1', 'X', '1','1','1'},
             {'1','1', '1', '1', '1','1','1'},
-            {'0','0', '1', '1', '1','0','0'},
+            {'1','1', '1', '1', '1','1','1'},
+            {'0','1', '1', '1', '1','1','0'},
             {'0','0', '1', '1', '1','0','0'}};
 
 

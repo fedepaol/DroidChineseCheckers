@@ -28,14 +28,15 @@ import com.fede.checkers.boards.BoardType;
 public class BoardListElem extends TableLayout {
     private TextView mName;
     private TextView mSaved;
-    private TextView mSavedDate;
     private TextView mMaxScore;
     private ImageView mBoardImg;
     
     
 
-    public BoardListElem(Context context) {
+    public BoardListElem(Context context, BoardType board) {
         super(context);
+        
+        
         String infService = Context.LAYOUT_INFLATER_SERVICE; 
         LayoutInflater li; 
         li = (LayoutInflater)getContext().getSystemService(infService); 
@@ -45,22 +46,23 @@ public class BoardListElem extends TableLayout {
                 
         mName = (TextView) findViewById(R.id.board_elem_name);
         mSaved = (TextView) findViewById(R.id.exists_saved);
-        mSavedDate = (TextView) findViewById(R.id.board_elem_date);
         mMaxScore = (TextView) findViewById(R.id.max_score);
-        mBoardImg = (ImageView) findViewById(R.id.BoardIcon);       
+        mBoardImg = (ImageView) findViewById(R.id.BoardIcon);
+        
+        setFromBoard(board);
     }
     
     
+    /** 
+     * Sets current element from board
+     * @param board
+     */
     public void setFromBoard(BoardType board){
         mName.setText(board.getName());
         Boolean existsSaved = board.load(getContext());
         mSaved.setText(existsSaved? "Saved" : "Not Saved");
-        if(existsSaved){
-            mSavedDate.setText(board.getSavedDate().toLocaleString());;
-        }else{
-            mSavedDate.setText("");
-        }
-        mMaxScore.setText("0");
+        
+        mMaxScore.setText(String.valueOf(board.getMaxScore()));
         mBoardImg.setImageResource(board.getImageResource());        
     }
 

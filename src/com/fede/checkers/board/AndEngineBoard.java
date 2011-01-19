@@ -35,7 +35,7 @@ public class AndEngineBoard {
     }
     
     static final float BALL_DISTANCE_FACTOR = 10;
-    static final float PADDING_FACTOR = 10;
+    static final float PADDING_FACTOR = 25;
 
     private final ChineseCheckers mGame;
     private  float mVerticalPadding = 0;    // Vertical Padding
@@ -234,7 +234,7 @@ public class AndEngineBoard {
      * horizontal padding is a fraction of width
      */
     private void setSizes(int ballNum, float width, float height){
-        mHorizontalPadding = ((float)width) / PADDING_FACTOR; 
+        mHorizontalPadding = 0;//((float)width) / PADDING_FACTOR; 
         
         
         mBallSize  = (width - 2 * mHorizontalPadding) / (ballNum + (ballNum + 1) / BALL_DISTANCE_FACTOR );        
@@ -257,7 +257,6 @@ public class AndEngineBoard {
 
         if(buildFromSaved && b.load(game)){
             this.buildFromString(b.getSavedDump(), f, b.getWidth(), b.getHeight());
-            game.updateScore(mScore);
         }else{
             this.buildFromString(b.getDump(), f, b.getWidth(), b.getHeight());
         }
@@ -326,17 +325,17 @@ public class AndEngineBoard {
      */
     public void postMoveOperations(){
         mScore++;
-        mGame.updateScore(mScore);
         
         for(int i = 0; i < mBoard.length; i++){
             for(int j = 0; j < mBoard[i].length; j++){
                 if(canMove(i, j)){  // checks if at least one ball can be moved
+                    mGame.playMarbleSound();
                     return;
                 }
             }
         }
             
-        mGame.onGameStall();
+        mGame.onGameStall(mScore);
         return;
     }
     

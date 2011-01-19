@@ -18,13 +18,12 @@ package com.fede.checkers.ui;
 
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
@@ -35,10 +34,12 @@ import com.admob.android.ads.AdView;
 import com.fede.checkers.Constants;
 import com.fede.checkers.R;
 import com.fede.checkers.board.AndEngineBoard;
-import com.fede.checkers.boards.BoardClassic;
+import com.fede.checkers.boards.BoardClassicExtended;
 import com.fede.checkers.boards.BoardType;
 import com.fede.checkers.boards.CheckersDbHelper;
 
+import org.anddev.andengine.audio.sound.Sound;
+import org.anddev.andengine.audio.sound.SoundFactory;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.options.EngineOptions;
@@ -47,18 +48,16 @@ import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolic
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.SpriteBackground;
 import org.anddev.andengine.entity.sprite.Sprite;
-import org.anddev.andengine.entity.text.ChangeableText;
 import org.anddev.andengine.entity.util.FPSLogger;
-import org.anddev.andengine.opengl.font.Font;
-import org.anddev.andengine.opengl.font.FontFactory;
 import org.anddev.andengine.opengl.texture.Texture;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.opengl.view.RenderSurfaceView;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
+import org.anddev.andengine.util.Debug;
 
-import javax.microedition.khronos.opengles.GL10;
+import java.io.IOException;
 
 /**
  * Main activity class. It implements the real game
@@ -70,20 +69,31 @@ public class ChineseCheckers extends BaseGameActivity {
 
     private Camera mCamera;
     CheckersSpriteFactory mSpriteFactory;
-    private BoardType mBoardType;
-    private Boolean mLoadSaved;
-    private AndEngineBoard mBoard;
+    private BoardType mBoardType;   // Board kind
+    private Boolean mLoadSaved;     // Says if a saved instance must be loaded
+    private AndEngineBoard mBoard;  
     private Boolean mFinishing;
-    private int mCameraWidth = 265;
+    private int mCameraWidth = Constants.CAMERA_WIDTH;
     private int mCameraHeight = 0;
+    private CheckersDbHelper db;
+    private String mBoardName;
     
-    private ChangeableText mScoreText;    
-    private Texture mFontTexture;
-    private Font mFont;
+
+    private Sound mMarbleSound;
 
 
     private TextureRegion mBackgroundRegion;
 
+    public static void launch(Activity launcher, String board, Boolean restore){
+        Intent i = new Intent(launcher, ChineseCheckers.class);
+        i.putExtra(Constants.BOARD_NAME_INTENT, board);
+        i.putExtra(Constants.BOARD_RESTORE_INTENT, restore);
+        launcher.startActivity(i);
+    }
+    
+    public static void launch(Activity launcher, String board){
+        launch(launcher, board, false);
+    }
     
     
     @Override
@@ -91,26 +101,24 @@ public class ChineseCheckers extends BaseGameActivity {
         mFinishing = false;
         Bundle extras = getIntent().getExtras();
         String boardName = extras != null ? extras.getString(Constants.BOARD_NAME_INTENT) 
-                : BoardClassic.NAME;
+                : BoardClassicExtended.NAME;
         
         mLoadSaved = extras != null ? extras.getBoolean(Constants.BOARD_RESTORE_INTENT, false) 
                 : false;
-        this.mBoardType = BoardType.getBoardFromName(boardName);
-       
+        
+        mBoardType = BoardType.getBoardFromName(boardName);
+        mBoardName = boardName;
+        db = new CheckersDbHelper(this); 
         super.onCreate(pSavedInstanceState);
     }
     
     @Override
     public Engine onLoadEngine() {
-        DisplayMetrics dm = new DisplayMetrics();       
-        getWindowManager().getDefaultDisplay().getMetrics(dm); 
         
-        
-        mCameraHeight = mCameraWidth*dm.heightPixels/dm.widthPixels;
-        
+        mCameraHeight = Constants.getHeight(mCameraWidth, this); 
         this.mCamera = new Camera(0, 0, mCameraWidth, mCameraHeight);
         return new Engine(new EngineOptions(true, ScreenOrientation.PORTRAIT, 
-                new RatioResolutionPolicy(dm.widthPixels, dm.heightPixels), this.mCamera));
+                new RatioResolutionPolicy(mCameraWidth, mCameraHeight), this.mCamera).setNeedsSound(true));
     }
 
     @Override
@@ -122,10 +130,12 @@ public class ChineseCheckers extends BaseGameActivity {
         mBackgroundRegion  = TextureRegionFactory.createFromAsset(texture, this, "gfx/back.png", 0, 0);
         mEngine.getTextureManager().loadTexture(texture);
         
-        FontFactory.setAssetBasePath("font/");
-        this.mFontTexture = new Texture(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        this.mFont = FontFactory.createFromAsset(this.mFontTexture, this, "Plok.ttf", 32, true, Color.WHITE);
-
+        SoundFactory.setAssetBasePath("mfx/");
+        try {
+            this.mMarbleSound = SoundFactory.createSoundFromAsset(this.mEngine.getSoundManager(), this, "marble.ogg");
+        } catch (final IOException e) {
+            Debug.e("Error", e);
+        }
 
     }
 
@@ -140,12 +150,6 @@ public class ChineseCheckers extends BaseGameActivity {
         
         mBoard = new AndEngineBoard(mCameraWidth, mCameraHeight, mBoardType, mLoadSaved, scene, mSpriteFactory, this);        
         scene.setTouchAreaBindingEnabled(true);
-        
-        this.mScoreText = new ChangeableText(5, 5, this.mFont, "Score: 0", "Score: XXXX".length());
-        this.mScoreText.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-        this.mScoreText.setAlpha(0.5f);
-        //scene.getLayer(Constants.SCORE_LAYER).addEntity(this.mScoreText);
-
         return scene;
     }
 
@@ -156,12 +160,20 @@ public class ChineseCheckers extends BaseGameActivity {
 
     @Override
     protected void onPause() {
+        db.close();
         if(!mFinishing){
             mBoardType.saveDump(mBoard.serialize(), mBoard.getScore(), this);
-            CheckersDbHelper.setLastBoardUsed(mBoardType.getName(), this);
+            CheckersDbHelper.setLastBoardUsed(mBoardName, this);
         }
         super.onPause();
     }
+    
+    @Override
+    protected void onResume() {
+        db.open();
+        super.onResume();
+    }
+    
 
 
     @Override
@@ -171,26 +183,32 @@ public class ChineseCheckers extends BaseGameActivity {
     }
     
     
+    private int getOldScore(){
+        return db.getBoardMaxScore(mBoardName);         
+    }
+    
     /**
      * Behaviour to be performed when no more moves are available
      */
-    public void onGameStall(){
+    public void onGameStall(long thisGameScore){ 
         String button1String = getString(R.string.new_game); 
         String cancelString = getString(R.string.back);
         AlertDialog.Builder ad = new AlertDialog.Builder(this); 
         ad.setTitle(getString(R.string.stall));
         
-        
-        ad.setMessage(getString(R.string.no_more_moves));
+        int oldScore = getOldScore();
+        if(thisGameScore > oldScore){
+            ad.setMessage(String.format(getString(R.string.no_more_moves_record), thisGameScore, oldScore));
+        }else{
+            ad.setMessage(String.format(getString(R.string.no_more_moves), thisGameScore));
+        }
         
         // Relaunch the same game
         ad.setPositiveButton(button1String,
                              new OnClickListener() { 
                                 public void onClick(DialogInterface dialog, int arg1) {
-                                    Intent i = new Intent(ChineseCheckers.this, ChineseCheckers.class);
-                                    i.putExtra(Constants.BOARD_NAME_INTENT, mBoardType.getName());
-                                    startActivity(i);
                                     mFinishing = true;
+                                    launch(ChineseCheckers.this, mBoardType.getName());
                                     ChineseCheckers.this.finish();
                                 } });    
         
@@ -204,6 +222,7 @@ public class ChineseCheckers extends BaseGameActivity {
                    } });
         ad.show();
         mBoardType.delete(this);
+        db.setBoardMaxScore(mBoardName, thisGameScore);
         return;    
     }
 
@@ -267,11 +286,13 @@ public class ChineseCheckers extends BaseGameActivity {
         this.testMode = testMode;
     }
 
-    public void updateScore(long mScore) {
-       // mScoreText.setText(String.valueOf(mScore));      
+    
+    public void playMarbleSound()
+    {
+        mMarbleSound.play();
     }
 
-
+    
 
 
     

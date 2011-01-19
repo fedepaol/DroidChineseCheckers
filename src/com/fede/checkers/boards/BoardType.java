@@ -25,7 +25,8 @@ import java.util.Date;
 public abstract class BoardType {
     String mSavedDump;
     Date mSavedDate;
-    Long mScore;
+    Long mSavedScore;
+    long mMaxScore = 0;
     Long rowId;
     Boolean mLoaded = false;
     
@@ -50,6 +51,7 @@ public abstract class BoardType {
                     Long.valueOf(score));
         }
         db.close();
+        saved.close();
         
     }   
     
@@ -60,8 +62,21 @@ public abstract class BoardType {
     public Date getSavedDate(){
         return mSavedDate;
     }
-        
+    
+    public Long getMaxScore(){
+        return mMaxScore;
+    }
+    
+    
+    /**
+     * Loads saved instance from sql lite
+     * @param ctx
+     * @return
+     */
     public Boolean load(Context ctx){
+        if(mLoaded){    // if already loaded doesn't need to load it again
+            return true;
+        }
         CheckersDbHelper db = new CheckersDbHelper(ctx);
         db.open();
         Cursor saved = db.getSavedBoard(getName());
@@ -70,12 +85,21 @@ public abstract class BoardType {
             mSavedDump =  saved.getString(CheckersStorage.BOARD_DUMP_COLUMN);
             mLoaded = true;
             mSavedDate = new Date(saved.getInt(CheckersStorage.BOARD_SAVEDDATE_COLUMN)); 
-            mScore = saved.getLong(CheckersStorage.BOARD_SCORE_COLUMN); 
+            mSavedScore = saved.getLong(CheckersStorage.BOARD_SCORE_COLUMN); 
+            mMaxScore = Long.valueOf(db.getBoardMaxScore(getName()));
+            saved.close();
+            db.close();
             return true;
         }
+        saved.close();
+        db.close();
         return false;       
     }
     
+    /**
+     * Deletes saved instance
+     * @param ctx
+     */
     public void delete(Context ctx){
         CheckersDbHelper db = new CheckersDbHelper(ctx);
         db.open();
@@ -83,6 +107,12 @@ public abstract class BoardType {
         db.close();
     }
     
+    
+    /** 
+     * Converts a char matrix into a board. Deserializes board
+     * @param map
+     * @return
+     */
     String getDumpFromMap(char[][] map) {
         StringBuffer res = new StringBuffer();
         for(int i = 0; i < map.length; i++){
@@ -103,24 +133,39 @@ public abstract class BoardType {
     }
     
     /** ADD HERE NEW BOARDS CREATION */
+    /** 
+     *  Build method. Returns a table form the given name
+     */
     public static BoardType getBoardFromName(String name){
+        if(name.equals(BoardClassicExtended.NAME)){
+            return new BoardClassicExtended();
+        }
         if(name.equals(BoardClassic.NAME)){
             return new BoardClassic();
         }
-        if(name.equals(RealBoardClassic.NAME)){
-            return new RealBoardClassic();
-        }
         if(name.equals(BoardStar.NAME)){
             return new BoardStar();
+        }
+        if(name.equals(BoardClassicEng.NAME)){
+            return new BoardClassicEng();
+        }
+        if(name.equals(BoardS.NAME)){
+            return new BoardS();
+        }
+        if(name.equals(BoardAsymmetrical.NAME)){
+            return new BoardAsymmetrical();
         }
         return null;
     }
     
     public static ArrayList<BoardType> getAllBoards(){
         ArrayList<BoardType> res = new ArrayList<BoardType>();
+        res.add(getBoardFromName(BoardClassicExtended.NAME));
         res.add(getBoardFromName(BoardClassic.NAME));
-        res.add(getBoardFromName(RealBoardClassic.NAME));
+        res.add(getBoardFromName(BoardClassicEng.NAME));
         res.add(getBoardFromName(BoardStar.NAME));
+        res.add(getBoardFromName(BoardS.NAME));
+        res.add(getBoardFromName(BoardAsymmetrical.NAME));
 
         return res;
     }

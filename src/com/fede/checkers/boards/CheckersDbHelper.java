@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.fede.checkers.boards;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -29,7 +30,7 @@ public class CheckersDbHelper extends CheckersStorage {
     }
     
     public Cursor getSavedBoard(String name){
-       Cursor res = db.query(BOARD_TABLE, new String[] {BOARD_ROW_ID,
+       Cursor res = mDb.query(BOARD_TABLE, new String[] {BOARD_ROW_ID,
                     BOARD_NAME_KEY,
                     BOARD_DUMP_KEY,
                     BOARD_SAVEDDATE_KEY,
@@ -46,7 +47,7 @@ public class CheckersDbHelper extends CheckersStorage {
     
     public boolean removeBoard(String name)
     {
-        return db.delete(BOARD_TABLE, BOARD_NAME_KEY+ "= '" + name + "'", null) > 0;
+        return mDb.delete(BOARD_TABLE, BOARD_NAME_KEY+ "= '" + name + "'", null) > 0;
     }
     
     public static void setLastBoardUsed(String boardName, Context ctx){
@@ -61,7 +62,43 @@ public class CheckersDbHelper extends CheckersStorage {
         setLastBoardUsed("", ctx);
     }
     
+    /**
+     * Returns the max score of the given board
+     */
+    public int getBoardMaxScore(String name){
+        Cursor res = mDb.query(BOARDSCORE_TABLE, new String[] {
+                    BOARDSCORE_ROW_ID,
+                    BOARDSCORE_NAME_KEY,
+                    BOARDSCORE_MAXSCORE_KEY}, BOARDSCORE_NAME_KEY + " = '" + name + "'", null, null, null, null);
+        
+        if(res == null)
+            return 0;
+        
+        res.moveToFirst();
+        if(res.getCount() <= 0){
+            res.close();
+            return 9;
+        }
+        
+        int result = res.getInt(BOARDSCORE_MAXSCORE_COLUMN);
+        res.close();
+        return result;
+    }
     
-    
+    public void setBoardMaxScore(String name, long maxScore){
+        String where = BOARDSCORE_NAME_KEY + " = '" + name + "'";
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BOARDSCORE_NAME_KEY, name);
+        contentValues.put(BOARDSCORE_MAXSCORE_KEY, maxScore);
+        int updated = mDb.update(BOARDSCORE_TABLE, contentValues, where, null);
+        
+        if(updated <= 1){
+            addBoardScore(name, Long.valueOf(maxScore));
+        }
+        
+        
+        
+        
+    }
 
 }

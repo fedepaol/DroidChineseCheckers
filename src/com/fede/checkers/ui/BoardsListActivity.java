@@ -67,10 +67,7 @@ public class BoardsListActivity extends ListActivity {
             ad.setNeutralButton(button2String,
                     new OnClickListener() { 
                        public void onClick(DialogInterface dialog, int arg1) {
-                           Intent i = new Intent(BoardsListActivity.this, ChineseCheckers.class);
-                           i.putExtra(Constants.BOARD_RESTORE_INTENT, true);
-                           i.putExtra(Constants.BOARD_NAME_INTENT, board.getName());
-                           startActivity(i);
+                           ChineseCheckers.launch(BoardsListActivity.this, board.getName(), true);
                        } });
         }else{
             ad.setMessage(getString(R.string.starting_new_game));
@@ -80,9 +77,7 @@ public class BoardsListActivity extends ListActivity {
                              new OnClickListener() { 
                                 public void onClick(DialogInterface dialog, int arg1) {
                                     board.delete(BoardsListActivity.this);
-                                    Intent i = new Intent(BoardsListActivity.this, ChineseCheckers.class);
-                                    i.putExtra(Constants.BOARD_NAME_INTENT, board.getName());
-                                    startActivity(i);
+                                    ChineseCheckers.launch(BoardsListActivity.this, board.getName());
                                 } });    
         
         
@@ -122,11 +117,11 @@ public class BoardsListActivity extends ListActivity {
             BoardListElem newView; 
             BoardType board = getItem(position);
             if (convertView == null) {
-                newView = new BoardListElem(getContext()); 
-                String inflater = Context.LAYOUT_INFLATER_SERVICE; 
-                LayoutInflater vi = (LayoutInflater)getContext().getSystemService(inflater);
-                newView.setFromBoard(board);
-                vi.inflate(resource, newView, true);
+                newView = new BoardListElem(getContext(), board); 
+                //String inflater = Context.LAYOUT_INFLATER_SERVICE; 
+                //LayoutInflater vi = (LayoutInflater)getContext().getSystemService(inflater);
+                //newView.setFromBoard(board);
+                //vi.inflate(resource, newView, true);
             } else { 
                 newView = (BoardListElem)convertView;
                 newView.setFromBoard(board);

@@ -24,7 +24,8 @@
     <string name="do_you_want_to_restore">Do you want to restore previous saved game?</string>
     <string name="starting_new_game">Do you want to start new game?</string>
     <string name="stall">Stall</string>
-    <string name="no_more_moves">No more moves available. Do you want to start new game?</string>
+    <string name="no_more_moves">No more moves available. \n Score %d. Do you want to start new game?</string>
+    <string name="no_more_moves_record">New Record! \n New Record: %1$d \n Old Record %2$d Do you want to start new game?</string>
 
     
 </resources>

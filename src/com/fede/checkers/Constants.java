@@ -15,6 +15,10 @@
  ******************************************************************************/
 package com.fede.checkers;
 
+import android.util.DisplayMetrics;
+
+import org.anddev.andengine.ui.activity.BaseGameActivity;
+
 
 public class Constants {
  
@@ -25,7 +29,16 @@ public class Constants {
     public static final int BALL_LAYER = 1;
     public static final int SCORE_LAYER = 2;
     
+    public static final int CAMERA_WIDTH = 480;
+    
     
     public static final String BOARD_NAME_INTENT = "com.checkers.BOARD_NAME";
     public static final String BOARD_RESTORE_INTENT = "com.checkers.BOARD_RESTORE";
+    
+    public static int getHeight(int width, BaseGameActivity g){
+        DisplayMetrics dm = new DisplayMetrics();       
+    
+        g.getWindowManager().getDefaultDisplay().getMetrics(dm);         
+        return width * dm.heightPixels/dm.widthPixels;
+    }
 }
