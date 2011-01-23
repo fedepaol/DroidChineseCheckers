@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public abstract class BoardType {
+public abstract class BoardKind {
     String mSavedDump;
     Date mSavedDate;
     Long mSavedScore;
@@ -71,10 +71,11 @@ public abstract class BoardType {
     /**
      * Loads saved instance from sql lite
      * @param ctx
+     * @param forceLoad forces load even if the istance was already loaded
      * @return
      */
-    public Boolean load(Context ctx){
-        if(mLoaded){    // if already loaded doesn't need to load it again
+    public Boolean load(Context ctx, boolean forceLoad){
+        if(mLoaded && !forceLoad){    // if already loaded doesn't need to load it again
             return true;
         }
         CheckersDbHelper db = new CheckersDbHelper(ctx);
@@ -94,6 +95,15 @@ public abstract class BoardType {
         saved.close();
         db.close();
         return false;       
+    }
+    
+    /**
+     * Loads saved instance from sql lite
+     * @param ctx
+     * @return
+     */
+    public Boolean load(Context ctx){
+        return load(ctx, false);
     }
     
     /**
@@ -136,7 +146,7 @@ public abstract class BoardType {
     /** 
      *  Build method. Returns a table form the given name
      */
-    public static BoardType getBoardFromName(String name){
+    public static BoardKind getBoardFromName(String name){
         if(name.equals(BoardClassicExtended.NAME)){
             return new BoardClassicExtended();
         }
@@ -158,8 +168,8 @@ public abstract class BoardType {
         return null;
     }
     
-    public static ArrayList<BoardType> getAllBoards(){
-        ArrayList<BoardType> res = new ArrayList<BoardType>();
+    public static ArrayList<BoardKind> getAllBoards(){
+        ArrayList<BoardKind> res = new ArrayList<BoardKind>();
         res.add(getBoardFromName(BoardClassicExtended.NAME));
         res.add(getBoardFromName(BoardClassic.NAME));
         res.add(getBoardFromName(BoardClassicEng.NAME));

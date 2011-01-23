@@ -16,4 +16,8 @@
 <resources>
 <color name="background_color">#595959</color>
 <color name="text_color">#FFF</color>
+<color name="gold">#FFD700</color>
+<color name="medium_blue">#0000CD</color>
+	
+
 </resources>

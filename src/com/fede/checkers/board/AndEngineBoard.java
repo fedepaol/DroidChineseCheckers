@@ -16,9 +16,9 @@
 package com.fede.checkers.board;
 import com.fede.checkers.Constants;
 import com.fede.checkers.board.BoardCell.CantFillException;
-import com.fede.checkers.boards.BoardType;
+import com.fede.checkers.boards.BoardKind;
 import com.fede.checkers.ui.CheckersSpriteFactory;
-import com.fede.checkers.ui.ChineseCheckers;
+import com.fede.checkers.ui.CheckersGameActivity;
 
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
@@ -37,10 +37,10 @@ public class AndEngineBoard {
     static final float BALL_DISTANCE_FACTOR = 10;
     static final float PADDING_FACTOR = 25;
 
-    private final ChineseCheckers mGame;
+    private final CheckersGameActivity mGame;
     private  float mVerticalPadding = 0;    // Vertical Padding
     private  float mHorizontalPadding = 0;  // Horizontal Padding
-    private float mDistanceFromBottom = 10;  // Extra offset from bottom
+    private float mDistanceFromBottom = 20;  // Extra offset from bottom
     private float mBallSize;
     private float mBallPadding;     // distance between the side of two balls
     private float mYDistance, mXDistance; // Distance between the center of two balls 
@@ -239,17 +239,18 @@ public class AndEngineBoard {
         
         mBallSize  = (width - 2 * mHorizontalPadding) / (ballNum + (ballNum + 1) / BALL_DISTANCE_FACTOR );        
         mBallPadding = mBallSize / BALL_DISTANCE_FACTOR;
-        mYDistance = (float) ( mBallSize + mBallPadding);
+        mYDistance = ( mBallSize + mBallPadding);
         mXDistance = mYDistance;
         
         mVerticalPadding = (height - mYDistance * (mWidth - 1)) / 2;  
     }
     
-    public AndEngineBoard(int width, int height, BoardType b, Boolean buildFromSaved, Scene s, CheckersSpriteFactory f, ChineseCheckers game){
+    public AndEngineBoard(int width, int height, BoardKind b, Boolean buildFromSaved, Scene s, CheckersSpriteFactory f, int offset, CheckersGameActivity game){
         mScene = s;
         mGame = game;
         mHeight = Long.valueOf(b.getHeight());
         mWidth = Long.valueOf(b.getWidth());
+        mDistanceFromBottom = offset;
         
         int ballNum = b.getWidth();
 
@@ -356,7 +357,7 @@ public class AndEngineBoard {
 
 
     
-    public ChineseCheckers getGame() {
+    public CheckersGameActivity getGame() {
         return mGame;
     }
     

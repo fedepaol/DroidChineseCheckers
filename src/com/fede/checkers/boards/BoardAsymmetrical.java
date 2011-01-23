@@ -19,7 +19,7 @@ import android.R;
 
 
 
-public class BoardAsymmetrical extends BoardType {
+public class BoardAsymmetrical extends BoardKind {
     public final static String NAME = "Asymmetrical";
     
     

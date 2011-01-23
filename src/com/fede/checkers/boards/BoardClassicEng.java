@@ -19,7 +19,7 @@ import android.R;
 
 
 
-public class BoardClassicEng extends BoardType {
+public class BoardClassicEng extends BoardKind {
     public final static String NAME = "French style";
     
     

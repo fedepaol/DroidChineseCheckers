@@ -15,13 +15,12 @@
   limitations under the License.
 -->
 <resources>
-    <string name="hello">Hello World, ChineseCheckers!</string>
     <string name="app_name">ChineseCheckers</string>
     <string name="new_game">New</string>
     <string name="restore_game">Restore</string>
     <string name="back">Back</string>
     <string name="max_score_name">Max Score:</string>
-    <string name="do_you_want_to_restore">Do you want to restore previous saved game?</string>
+    <string name="do_you_want_to_restore">Do you want to restore previously saved game?</string>
     <string name="starting_new_game">Do you want to start new game?</string>
     <string name="stall">Stall</string>
     <string name="new_record">New Record!</string>

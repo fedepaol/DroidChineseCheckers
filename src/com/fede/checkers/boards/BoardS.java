@@ -19,7 +19,7 @@ import android.R;
 
 
 
-public class BoardS extends BoardType {
+public class BoardS extends BoardKind {
     public final static String NAME = "S";
     
     

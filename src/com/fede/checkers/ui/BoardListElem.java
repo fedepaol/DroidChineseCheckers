@@ -22,18 +22,19 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.fede.checkers.R;
-import com.fede.checkers.boards.BoardType;
+import com.fede.checkers.boards.BoardKind;
 
 
 public class BoardListElem extends TableLayout {
     private TextView mName;
-    private TextView mSaved;
+    
     private TextView mMaxScore;
     private ImageView mBoardImg;
+    private ImageView mSavedIndicator;
     
     
 
-    public BoardListElem(Context context, BoardType board) {
+    public BoardListElem(Context context, BoardKind board) {
         super(context);
         
         
@@ -45,7 +46,7 @@ public class BoardListElem extends TableLayout {
         
                 
         mName = (TextView) findViewById(R.id.board_elem_name);
-        mSaved = (TextView) findViewById(R.id.exists_saved);
+        mSavedIndicator = (ImageView) findViewById(R.id.exists_saved);
         mMaxScore = (TextView) findViewById(R.id.max_score);
         mBoardImg = (ImageView) findViewById(R.id.BoardIcon);
         
@@ -57,10 +58,14 @@ public class BoardListElem extends TableLayout {
      * Sets current element from board
      * @param board
      */
-    public void setFromBoard(BoardType board){
+    public void setFromBoard(BoardKind board){
         mName.setText(board.getName());
-        Boolean existsSaved = board.load(getContext());
-        mSaved.setText(existsSaved? "Saved" : "Not Saved");
+        Boolean existsSaved = board.load(getContext(), true);
+        if(existsSaved){
+            mSavedIndicator.setImageResource(android.R.drawable.ic_menu_save );
+        }else{
+            mSavedIndicator.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+        }
         
         mMaxScore.setText(String.valueOf(board.getMaxScore()));
         mBoardImg.setImageResource(board.getImageResource());        

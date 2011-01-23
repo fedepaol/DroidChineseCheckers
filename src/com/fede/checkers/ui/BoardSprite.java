@@ -19,7 +19,6 @@ import com.fede.checkers.board.AndEngineBoard;
 
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
-import org.anddev.andengine.ui.activity.BaseGameActivity;
 
 
 public class BoardSprite extends Sprite {

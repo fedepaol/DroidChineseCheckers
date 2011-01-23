@@ -30,6 +30,7 @@ public class Constants {
     public static final int SCORE_LAYER = 2;
     
     public static final int CAMERA_WIDTH = 480;
+    public static final int ADMOB_HEIGHT = 40;
     
     
     public static final String BOARD_NAME_INTENT = "com.checkers.BOARD_NAME";
@@ -40,5 +41,14 @@ public class Constants {
     
         g.getWindowManager().getDefaultDisplay().getMetrics(dm);         
         return width * dm.heightPixels/dm.widthPixels;
+    }
+    
+    
+    
+    public static int getOffset(int width, BaseGameActivity g){
+        DisplayMetrics dm = new DisplayMetrics();       
+        
+        g.getWindowManager().getDefaultDisplay().getMetrics(dm);         
+        return width * ADMOB_HEIGHT /dm.widthPixels;
     }
 }

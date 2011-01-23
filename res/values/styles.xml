@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  
+  <style name="BoardListElem">    
+    <item name="android:background">@color/gold</item>
+    <item name="android:paddingLeft">10dip</item>
+    <item name="android:paddingRight">10dip</item>
+    <item name="android:paddingTop">8dip</item>
+    <item name="android:paddingBottom">8dip</item>
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">fill_parent</item>
+  </style>
+  
+  
+  <style name="BoardListElemName">
+  	<item name="android:layout_width">wrap_content</item>
+  	<item name="android:textSize">16dip</item>
+	<item name="android:textColor">@color/medium_blue</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:paddingLeft">5dip</item>
+  </style>
+  
+  <style name="BoardListElemScore">
+  	<item name="android:layout_width">wrap_content</item>
+  	<item name="android:textSize">12dip</item>
+	<item name="android:textColor">@color/medium_blue</item>
+    
+  </style>
+  
+  
+</resources>

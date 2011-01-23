@@ -35,7 +35,7 @@ import com.fede.checkers.Constants;
 import com.fede.checkers.R;
 import com.fede.checkers.board.AndEngineBoard;
 import com.fede.checkers.boards.BoardClassicExtended;
-import com.fede.checkers.boards.BoardType;
+import com.fede.checkers.boards.BoardKind;
 import com.fede.checkers.boards.CheckersDbHelper;
 
 import org.anddev.andengine.audio.sound.Sound;
@@ -64,17 +64,18 @@ import java.io.IOException;
  * @author fede
  *
  */
-public class ChineseCheckers extends BaseGameActivity {
+public class CheckersGameActivity extends BaseGameActivity {
 
 
     private Camera mCamera;
     CheckersSpriteFactory mSpriteFactory;
-    private BoardType mBoardType;   // Board kind
+    private BoardKind mBoardType;   // Board kind
     private Boolean mLoadSaved;     // Says if a saved instance must be loaded
     private AndEngineBoard mBoard;  
     private Boolean mFinishing;
     private int mCameraWidth = Constants.CAMERA_WIDTH;
     private int mCameraHeight = 0;
+    private int mAdMobOffset = 0;
     private CheckersDbHelper db;
     private String mBoardName;
     
@@ -85,7 +86,7 @@ public class ChineseCheckers extends BaseGameActivity {
     private TextureRegion mBackgroundRegion;
 
     public static void launch(Activity launcher, String board, Boolean restore){
-        Intent i = new Intent(launcher, ChineseCheckers.class);
+        Intent i = new Intent(launcher, CheckersGameActivity.class);
         i.putExtra(Constants.BOARD_NAME_INTENT, board);
         i.putExtra(Constants.BOARD_RESTORE_INTENT, restore);
         launcher.startActivity(i);
@@ -106,7 +107,7 @@ public class ChineseCheckers extends BaseGameActivity {
         mLoadSaved = extras != null ? extras.getBoolean(Constants.BOARD_RESTORE_INTENT, false) 
                 : false;
         
-        mBoardType = BoardType.getBoardFromName(boardName);
+        mBoardType = BoardKind.getBoardFromName(boardName);
         mBoardName = boardName;
         db = new CheckersDbHelper(this); 
         super.onCreate(pSavedInstanceState);
@@ -115,7 +116,8 @@ public class ChineseCheckers extends BaseGameActivity {
     @Override
     public Engine onLoadEngine() {
         
-        mCameraHeight = Constants.getHeight(mCameraWidth, this); 
+        mCameraHeight = Constants.getHeight(mCameraWidth, this);
+        mAdMobOffset = Constants.getOffset(mCameraWidth, this);
         this.mCamera = new Camera(0, 0, mCameraWidth, mCameraHeight);
         return new Engine(new EngineOptions(true, ScreenOrientation.PORTRAIT, 
                 new RatioResolutionPolicy(mCameraWidth, mCameraHeight), this.mCamera).setNeedsSound(true));
@@ -148,7 +150,7 @@ public class ChineseCheckers extends BaseGameActivity {
         Sprite back = new Sprite(0, 0, mBackgroundRegion);
         scene.setBackground(new SpriteBackground(back));
         
-        mBoard = new AndEngineBoard(mCameraWidth, mCameraHeight, mBoardType, mLoadSaved, scene, mSpriteFactory, this);        
+        mBoard = new AndEngineBoard(mCameraWidth, mCameraHeight, mBoardType, mLoadSaved, scene, mSpriteFactory, mAdMobOffset, this);        
         scene.setTouchAreaBindingEnabled(true);
         return scene;
     }
@@ -161,7 +163,7 @@ public class ChineseCheckers extends BaseGameActivity {
     @Override
     protected void onPause() {
         db.close();
-        if(!mFinishing){
+        if(!mFinishing && mBoard.getScore() > 0){
             mBoardType.saveDump(mBoard.serialize(), mBoard.getScore(), this);
             CheckersDbHelper.setLastBoardUsed(mBoardName, this);
         }
@@ -210,8 +212,8 @@ public class ChineseCheckers extends BaseGameActivity {
                              new OnClickListener() { 
                                 public void onClick(DialogInterface dialog, int arg1) {
                                     mFinishing = true;
-                                    launch(ChineseCheckers.this, mBoardType.getName());
-                                    ChineseCheckers.this.finish();
+                                    launch(CheckersGameActivity.this, mBoardType.getName());
+                                    CheckersGameActivity.this.finish();
                                 } });    
         
         
@@ -220,7 +222,7 @@ public class ChineseCheckers extends BaseGameActivity {
                 new OnClickListener() { 
                    public void onClick(DialogInterface dialog, int arg1) {
                        mFinishing = true;
-                       ChineseCheckers.this.finish();
+                       CheckersGameActivity.this.finish();
                    } });
         ad.show();
         mBoardType.delete(this);
@@ -250,6 +252,7 @@ public class ChineseCheckers extends BaseGameActivity {
         adView.setVisibility(View.VISIBLE);
         adView.requestFreshAd();
         adView.setRequestInterval(30);
+        
 
         this.mRenderSurfaceView = new RenderSurfaceView(this);
         mRenderSurfaceView.setRenderer(mEngine);
@@ -269,6 +272,7 @@ public class ChineseCheckers extends BaseGameActivity {
         relativeLayout.addView(this.mRenderSurfaceView, surfaceViewLayoutParams);
         relativeLayout.addView(adView, adViewLayoutParams);
 
+        
         this.setContentView(relativeLayout, relativeLayoutLayoutParams);    
     }
 
@@ -293,6 +297,8 @@ public class ChineseCheckers extends BaseGameActivity {
     {
         mMarbleSound.play();
     }
+
+    
 
     
 

@@ -19,18 +19,15 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.fede.checkers.Constants;
 import com.fede.checkers.R;
-import com.fede.checkers.boards.BoardType;
+import com.fede.checkers.boards.BoardKind;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +36,14 @@ import java.util.List;
 
 
 public class BoardsListActivity extends ListActivity {
-    ArrayList<BoardType> mBoards;
+    ArrayList<BoardKind> mBoards;
     MyArrayAdapter mAdapter;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_list);
-        mBoards = BoardType.getAllBoards();
+        mBoards = BoardKind.getAllBoards();
         
         mAdapter = new MyArrayAdapter(this, R.layout.board_list_elem, mBoards);
         
@@ -54,7 +51,7 @@ public class BoardsListActivity extends ListActivity {
     }
     
     
-    void showDialog(Boolean existsSaved, final BoardType board)
+    void showDialog(Boolean existsSaved, final BoardKind board)
     {
         String button1String = getString(R.string.new_game); 
         String button2String = getString(R.string.restore_game); 
@@ -67,7 +64,7 @@ public class BoardsListActivity extends ListActivity {
             ad.setNeutralButton(button2String,
                     new OnClickListener() { 
                        public void onClick(DialogInterface dialog, int arg1) {
-                           ChineseCheckers.launch(BoardsListActivity.this, board.getName(), true);
+                           CheckersGameActivity.launch(BoardsListActivity.this, board.getName(), true);
                        } });
         }else{
             ad.setMessage(getString(R.string.starting_new_game));
@@ -77,7 +74,7 @@ public class BoardsListActivity extends ListActivity {
                              new OnClickListener() { 
                                 public void onClick(DialogInterface dialog, int arg1) {
                                     board.delete(BoardsListActivity.this);
-                                    ChineseCheckers.launch(BoardsListActivity.this, board.getName());
+                                    CheckersGameActivity.launch(BoardsListActivity.this, board.getName());
                                 } });    
         
         
@@ -93,7 +90,7 @@ public class BoardsListActivity extends ListActivity {
     
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        BoardType board = mBoards.get(position);       
+        BoardKind board = mBoards.get(position);       
         Boolean existsSaved = board.load(this);            
         showDialog(existsSaved, board);
 
@@ -103,11 +100,11 @@ public class BoardsListActivity extends ListActivity {
     }
 
  
-    public class MyArrayAdapter extends ArrayAdapter<BoardType> {
+    public class MyArrayAdapter extends ArrayAdapter<BoardKind> {
         int resource;
         public MyArrayAdapter(Context context, 
                               int _resource,
-                              List<BoardType> items) {
+                              List<BoardKind> items) {
             super(context, _resource, items);
             resource = _resource;
         }
@@ -115,7 +112,7 @@ public class BoardsListActivity extends ListActivity {
         @Override 
         public View getView(int position, View convertView, ViewGroup parent) {
             BoardListElem newView; 
-            BoardType board = getItem(position);
+            BoardKind board = getItem(position);
             if (convertView == null) {
                 newView = new BoardListElem(getContext(), board); 
                 //String inflater = Context.LAYOUT_INFLATER_SERVICE; 
