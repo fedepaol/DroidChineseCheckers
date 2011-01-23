@@ -258,6 +258,7 @@ public class AndEngineBoard {
 
         if(buildFromSaved && b.load(game)){
             this.buildFromString(b.getSavedDump(), f, b.getWidth(), b.getHeight());
+            this.mScore = b.getSavedScore();
         }else{
             this.buildFromString(b.getDump(), f, b.getWidth(), b.getHeight());
         }

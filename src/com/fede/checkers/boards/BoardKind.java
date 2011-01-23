@@ -67,6 +67,9 @@ public abstract class BoardKind {
         return mMaxScore;
     }
     
+    public Long getSavedScore(){
+        return mSavedScore;
+    }
     
     /**
      * Loads saved instance from sql lite

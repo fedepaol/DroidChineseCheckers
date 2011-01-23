@@ -32,8 +32,8 @@ public class CheckersMainMenu extends BaseGameActivity implements IOnMenuItemCli
 
 	
 
-	protected static final int MENU_RESET = 0;
-	protected static final int MENU_QUIT = MENU_RESET + 1;
+	protected static final int MENU_OK = 0;
+	protected static final int MENU_QUIT = MENU_OK + 1;
 
 	// ===========================================================
 	// Fields
@@ -47,7 +47,7 @@ public class CheckersMainMenu extends BaseGameActivity implements IOnMenuItemCli
 	protected MenuScene mMenuScene;
 
 	private Texture mMenuTexture;
-	protected TextureRegion mMenuResetTextureRegion;
+	protected TextureRegion mMenuOkTextureRegion;
 	protected TextureRegion mMenuQuitTextureRegion;
 
 	// ===========================================================
@@ -75,7 +75,7 @@ public class CheckersMainMenu extends BaseGameActivity implements IOnMenuItemCli
 	public void onLoadResources() {
 		
 		this.mMenuTexture = new Texture(256, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mMenuResetTextureRegion = TextureRegionFactory.createFromAsset(this.mMenuTexture, this, "gfx/menu_reset.png", 0, 0);
+		this.mMenuOkTextureRegion = TextureRegionFactory.createFromAsset(this.mMenuTexture, this, "gfx/menu_ok.png", 0, 0);
 		this.mMenuQuitTextureRegion = TextureRegionFactory.createFromAsset(this.mMenuTexture, this, "gfx/menu_quit.png", 0, 50);
 		this.mEngine.getTextureManager().loadTexture(this.mMenuTexture);
 	}
@@ -105,7 +105,7 @@ public class CheckersMainMenu extends BaseGameActivity implements IOnMenuItemCli
 	@Override
 	public boolean onMenuItemClicked(final MenuScene pMenuScene, final IMenuItem pMenuItem, final float pMenuItemLocalX, final float pMenuItemLocalY) {
 		switch(pMenuItem.getID()) {
-			case MENU_RESET:
+			case MENU_OK:
 			    Intent i = new Intent(this, BoardsListActivity.class);		        
 		        startActivity(i);
 				return true;
@@ -125,9 +125,9 @@ public class CheckersMainMenu extends BaseGameActivity implements IOnMenuItemCli
 	protected void createMenuScene() {
 		this.mMenuScene = new MenuScene(this.mCamera);
 
-		final SpriteMenuItem resetMenuItem = new SpriteMenuItem(MENU_RESET, this.mMenuResetTextureRegion);
-		resetMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		this.mMenuScene.addMenuItem(resetMenuItem);
+		final SpriteMenuItem okMenuItem = new SpriteMenuItem(MENU_OK, this.mMenuOkTextureRegion);
+		okMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		this.mMenuScene.addMenuItem(okMenuItem);
 		
 		final SpriteMenuItem quitMenuItem = new SpriteMenuItem(MENU_QUIT, this.mMenuQuitTextureRegion);
 		quitMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
