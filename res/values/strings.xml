@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2011 Federico Paolinelli
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<resources>
+    <string name="app_name">PegDroid</string>
+    <string name="new_game">New</string>
+    <string name="restore_game">Restore</string>
+    <string name="back">Back</string>
+    <string name="max_score_name">Best Balls Left:</string>
+    <string name="do_you_want_to_restore">Do you want to restore previously saved game?</string>
+    <string name="starting_new_game">Do you want to start new game?</string>
+    <string name="stall">Stall</string>
+    <string name="new_record">New Record!</string>
+    <string name="no_more_moves">No more moves available. \nRemaining balls %d. Do you want to start new game?</string>
+    <string name="no_more_moves_record">Remaining balls: %1$d \nOld Record: %2$d\nDo you want to start new game?</string>
+
+    
+</resources>

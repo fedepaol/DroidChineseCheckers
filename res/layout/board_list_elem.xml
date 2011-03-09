@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout android:id="@+id/PositionElemTable" 
+             android:layout_width="fill_parent" 
+             android:layout_height="wrap_content"
+             style="@style/BoardListElem" 
+             android:stretchColumns="1"
+             xmlns:android="http://schemas.android.com/apk/res/android">
+	<TableRow>	        
+	   <ImageView 
+	   		android:id="@+id/BoardIcon" 
+	   		android:layout_width="wrap_content" 
+	   		android:layout_height="wrap_content" />
+	   <TextView
+	   		style="@style/BoardListElemName"
+	  		android:id="@+id/board_elem_name"
+	  		/>
+	   <ImageView 
+	   		android:id="@+id/exists_saved" 
+	   		android:layout_width="fill_parent" 
+	   		android:layout_height="wrap_content" 
+	   		android:gravity="right"/>    
+	</TableRow>
+	<TableRow
+		>
+		<TextView 
+			android:text="@string/max_score_name" 
+			style="@style/BoardListElemScore"/>
+	    <TextView
+	         android:id="@+id/max_score"
+	         style="@style/BoardListElemScore"/>
+	</TableRow>
+</TableLayout>
