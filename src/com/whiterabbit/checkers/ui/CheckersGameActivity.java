@@ -35,6 +35,7 @@ import org.anddev.andengine.opengl.texture.Texture;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
+import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
 import org.anddev.andengine.opengl.view.RenderSurfaceView;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 import org.anddev.andengine.util.Debug;
@@ -56,16 +57,18 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.whiterabbit.checkers.Constants;
 import com.whiterabbit.checkers.R;
 import com.whiterabbit.checkers.board.AndEngineBoard;
+import com.whiterabbit.checkers.board.BoardCell.CantFillException;
 import com.whiterabbit.checkers.boards.BoardClassicExtended;
 import com.whiterabbit.checkers.boards.BoardKind;
 import com.whiterabbit.checkers.boards.CheckersDbHelper;
+import com.whiterabbit.checkers.ui.BackArrowSprite.BackInterface;
 
 /**
  * Main activity class. It implements the real game
  * @author fede
  *
  */
-public class CheckersGameActivity extends BaseGameActivity {
+public class CheckersGameActivity extends BaseGameActivity implements BackInterface{
 
 	GoogleAnalyticsTracker tracker;
 
@@ -81,11 +84,15 @@ public class CheckersGameActivity extends BaseGameActivity {
     private CheckersDbHelper db;
     private String mBoardName;
     
+    
 
     private Sound mMarbleSound;
 
 
     private TextureRegion mBackgroundRegion;
+    private TiledTextureRegion mBackArrowRegion;
+    private Texture mBackArrowTexture;
+    private BackArrowSprite mBackArrow;
 
     public static void launch(Activity launcher, String board, Boolean restore){
         Intent i = new Intent(launcher, CheckersGameActivity.class);
@@ -155,6 +162,13 @@ public class CheckersGameActivity extends BaseGameActivity {
         } catch (final IOException e) {
             Debug.e("Error", e);
         }
+        
+        
+        
+        this.mBackArrowTexture = new Texture(128, 64, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        this.mBackArrowRegion = TextureRegionFactory.createTiledFromAsset(this.mBackArrowTexture, this, "gfx/back_arrow.png", 0, 0,2,1);
+        this.mBackArrowRegion.setCurrentTileIndex(BackArrowSprite.DISABLED_TILE);
+		this.mEngine.getTextureManager().loadTexture(this.mBackArrowTexture);
 
     }
 
@@ -167,7 +181,12 @@ public class CheckersGameActivity extends BaseGameActivity {
         Sprite back = new Sprite(0, 0, mBackgroundRegion);
         scene.setBackground(new SpriteBackground(back));
         
-        mBoard = new AndEngineBoard(mCameraWidth, mCameraHeight, mBoardType, mLoadSaved, scene, mSpriteFactory, mAdMobOffset, this);        
+        mBoard = new AndEngineBoard(mCameraWidth, mCameraHeight, mBoardType, mLoadSaved, scene, mSpriteFactory, mAdMobOffset, this); 
+        
+        this.mBackArrow = new BackArrowSprite(mCameraWidth - 64 - 10, 10, 64, 64, mBackArrowRegion, mBackArrowTexture, this, this);
+        scene.getLayer(Constants.SCORE_LAYER).addEntity(mBackArrow);
+        scene.registerTouchArea(mBackArrow);
+                
         scene.setTouchAreaBindingEnabled(true);
         return scene;
     }
@@ -314,6 +333,20 @@ public class CheckersGameActivity extends BaseGameActivity {
     public void playMarbleSound()
     {
         mMarbleSound.play();
+    }
+    
+    
+    public void onMove(){
+    	mBackArrow.enable();
+    }
+    
+    @Override
+    public void onBackArrowPressed(){
+    	try {
+			mBoard.backMove();
+		} catch (CantFillException e) {
+			
+		}
     }
 
     
