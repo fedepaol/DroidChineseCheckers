@@ -154,6 +154,10 @@ public class AndEngineBoard {
 		if (res >= mWidth) {
 			res = mWidth.intValue() - 1;
 		}
+		
+		if(res < 0){
+			return 0;
+		}
 		return res;
 	}
 
@@ -166,6 +170,10 @@ public class AndEngineBoard {
 
 		if (res >= mHeight) {
 			res = mHeight.intValue() - 1;
+		}
+		
+		if(res < 0){
+			return 0;
 		}
 		return res;
 	}

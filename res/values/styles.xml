@@ -22,7 +22,7 @@
   <style name="BoardListElemName">
   	<item name="android:layout_width">wrap_content</item>
   	<item name="android:textSize">20dip</item>
-	<item name="android:textColor">@color/medium_blue</item>
+	<item name="android:textColor">@color/light_grey</item>
     <item name="android:textStyle">bold</item>
     <item name="android:paddingLeft">5dip</item>
     <item name="android:typeface">sans</item>
@@ -32,7 +32,7 @@
   <style name="BoardListElemScore">
   	<item name="android:layout_width">wrap_content</item>
   	<item name="android:textSize">12dip</item>
-	<item name="android:textColor">@color/medium_blue</item>
+	<item name="android:textColor">@color/light_grey</item>
     
   </style>
   
