@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="/Users/fede/Dropbox/devel/andengineexamples/lib/andengine.jar"/>
 	<classpathentry kind="lib" path="/Users/fede/Dropbox/devel/workspace/AndCheckers/admob-sdk-android.jar"/>
 	<classpathentry kind="lib" path="lib/libGoogleAnalytics.jar"/>
+	<classpathentry kind="lib" path="/Users/fede/devel/sdks/Scoreloop_core_social_android_2.2/ScoreloopUI/libs/scoreloop-core.jar"/>
+	<classpathentry kind="src" path="ScoreloopUI_src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -54,6 +54,10 @@ import android.widget.RelativeLayout;
 import com.admob.android.ads.AdManager;
 import com.admob.android.ads.AdView;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.scoreloop.client.android.core.model.Achievement;
+import com.scoreloop.client.android.ui.LeaderboardsScreenActivity;
+import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
+import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
 import com.whiterabbit.checkers.Constants;
 import com.whiterabbit.checkers.R;
 import com.whiterabbit.checkers.board.AndEngineBoard;
@@ -68,7 +72,7 @@ import com.whiterabbit.checkers.ui.BackArrowSprite.BackInterface;
  * @author fede
  *
  */
-public class CheckersGameActivity extends BaseGameActivity implements BackInterface{
+public class CheckersGameActivity extends BaseGameActivity implements BackInterface, OnScoreSubmitObserver{
 
 	GoogleAnalyticsTracker tracker;
 
@@ -231,18 +235,12 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     public void onGameStall(long thisGameScore){ 
         String button1String = getString(R.string.new_game); 
         String cancelString = getString(R.string.back);
+        String checkLeaderboardString = getString(R.string.check_leaderboard);
         AlertDialog.Builder ad = new AlertDialog.Builder(this); 
+
+        long oldScore = getOldScore();
         
-        
-        int oldScore = getOldScore();
-        if(thisGameScore > oldScore){
-            ad.setTitle(getString(R.string.new_record));
-            ad.setMessage(String.format(getString(R.string.no_more_moves_record), mBoardType.getRemainingBallsFromScore(thisGameScore), 
-            																	  mBoardType.getRemainingBallsFromScore(oldScore)));
-        }else{
-            ad.setTitle(getString(R.string.stall));
-            ad.setMessage(String.format(getString(R.string.no_more_moves), mBoardType.getRemainingBallsFromScore(thisGameScore)));
-        }
+        setDialogMessage(thisGameScore, oldScore , ad);
         
         // Relaunch the same game
         ad.setPositiveButton(button1String,
@@ -261,12 +259,67 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
                        mFinishing = true;
                        CheckersGameActivity.this.finish();
                    } });
+        
+        // goes to scoreloop leaderboard
+        ad.setNeutralButton(checkLeaderboardString, new OnClickListener() { 
+            public void onClick(DialogInterface dialog, int arg1) {
+                mFinishing = true;
+                final Intent intent = new Intent(CheckersGameActivity.this, LeaderboardsScreenActivity.class);
+                intent.putExtra(LeaderboardsScreenActivity.MODE, mBoardType.getMode()); 
+                startActivity(intent);
+                CheckersGameActivity.this.finish();
+            } });   
+        
+        
         ad.show();
         mBoardType.delete(this);
         db.setBoardMaxScore(mBoardName, thisGameScore);
         return;    
     }
 
+    
+    /**
+     * Sets board finished dialog message
+     * @param newScore
+     * @param oldScore
+     * @param ad
+     */
+    private void setDialogMessage(long newScore, long oldScore, AlertDialog.Builder ad){
+    	if(newScore > oldScore){
+        	
+        	long remainingBalls = mBoardType.getRemainingBallsFromScore(newScore);
+        	notifyScoreLoop(remainingBalls);
+        	
+        	if(remainingBalls == 1){
+        		ad.setTitle(getString(R.string.achievement));
+        		ad.setMessage(String.format(getString(R.string.you_are_now_master_of), mBoardType.getName()));
+        	}else{
+        		ad.setTitle(getString(R.string.new_record));
+        		ad.setMessage(String.format(getString(R.string.no_more_moves_record), mBoardType.getRemainingBallsFromScore(newScore), 
+            																	  mBoardType.getRemainingBallsFromScore(oldScore)));
+        	}
+        }else{
+            ad.setTitle(getString(R.string.stall));
+            ad.setMessage(String.format(getString(R.string.no_more_moves), mBoardType.getRemainingBallsFromScore(newScore)));
+        }
+    }
+    
+    
+    /**
+     * Sends result to scoreloop
+     * @param remainingBalls
+     */
+    private void notifyScoreLoop(long remainingBalls){
+    	Double scoreResult = Double.valueOf(remainingBalls);			
+		ScoreloopManagerSingleton.get().onGamePlayEnded(scoreResult, new Integer(mBoardType.getMode()));
+    	
+		if(remainingBalls == 1){
+			Achievement _achievement;
+			_achievement = ScoreloopManagerSingleton.get().getAchievement(mBoardType.getAchievement());
+	        ScoreloopManagerSingleton.get().achieveAward(_achievement.getAward().getIdentifier(), true, true);
+			
+		}
+    }
 
     protected boolean showInCenter=true;
     protected boolean testMode=true;
@@ -348,6 +401,12 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
 			
 		}
     }
+
+	@Override
+	public void onScoreSubmit(int status, Exception error) {
+		// TODO Auto-generated method stub
+		
+	}
 
     
 

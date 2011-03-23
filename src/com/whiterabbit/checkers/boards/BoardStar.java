@@ -54,4 +54,17 @@ public class BoardStar extends BoardKind {
 	char[][] getMap() {
 		return map;
 	}
+
+
+	@Override
+	public
+	int getMode() {
+		return 4;
+	}
+
+
+	@Override
+	public String getAchievement() {
+		return "com.pegdroid.diamond";
+	}
 }

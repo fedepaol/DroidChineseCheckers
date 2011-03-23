@@ -53,4 +53,17 @@ public class BoardAsymmetrical extends BoardKind {
 		return map;
 	}
 
+
+
+	@Override
+	public
+	int getMode() {
+		return 3;
+	}
+	
+	
+	public String getAchievement(){
+		return "com.pegdroid.asymmetrical";
+	}
+
 }

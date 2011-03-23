@@ -56,4 +56,22 @@ public class BoardS extends BoardKind {
 		return map;
 	}
 
+
+
+
+	@Override
+	public
+	int getMode() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+
+	@Override
+	public String getAchievement() {
+		return "fava";
+	}
+
 }

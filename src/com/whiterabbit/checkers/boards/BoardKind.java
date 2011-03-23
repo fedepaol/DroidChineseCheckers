@@ -243,6 +243,14 @@ public abstract class BoardKind {
     
     abstract char[][] getMap();
     
+    /**
+     * Returns scoreloop mode
+     * @return
+     */
+    public abstract int getMode();
+    
+    
+    public abstract String getAchievement();
     
     
 }

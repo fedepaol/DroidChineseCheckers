@@ -6,7 +6,6 @@ import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.EngineOptions.ScreenOrientation;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.anddev.andengine.entity.scene.Scene;
-import org.anddev.andengine.entity.scene.menu.MenuScene;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.util.FPSLogger;
 import org.anddev.andengine.input.touch.TouchEvent;
@@ -20,10 +19,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.scoreloop.client.android.ui.EntryScreenActivity;
 import com.whiterabbit.checkers.Constants;
-import com.whiterabbit.checkers.boards.BoardClassicExtended;
-import com.whiterabbit.checkers.boards.BoardKind;
-import com.whiterabbit.checkers.boards.CheckersDbHelper;
 
 
 public class CheckersMainMenu extends BaseGameActivity {
@@ -46,6 +43,7 @@ public class CheckersMainMenu extends BaseGameActivity {
 	protected Scene mMainScene;
 	private Texture mPlayTexture;
 	protected TextureRegion mPlayTextureRegion;
+	protected TextureRegion mScoreloopTextureRegion;
 	
 	protected TextureRegion mBackgroundTextureRegion;
 	protected Texture mBackgroundTexture;
@@ -74,8 +72,9 @@ public class CheckersMainMenu extends BaseGameActivity {
 	@Override
 	public void onLoadResources() {
 		
-		this.mPlayTexture = new Texture(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mPlayTexture = new Texture(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mPlayTextureRegion = TextureRegionFactory.createFromAsset(this.mPlayTexture, this, "gfx/play_button.png", 0, 0);
+		this.mScoreloopTextureRegion = TextureRegionFactory.createFromAsset(this.mPlayTexture, this, "gfx/scoreloop_button.png", 256, 0);
 		
 		this.mBackgroundTexture = new Texture(1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mBackgroundTextureRegion = TextureRegionFactory.createFromAsset(this.mBackgroundTexture, this, "gfx/menu_back.png", 0, 0);
@@ -103,9 +102,23 @@ public class CheckersMainMenu extends BaseGameActivity {
 			}
 			
 		};
+		
+		Sprite scoreloopSprite = new Sprite(10, 10, this.mScoreloopTextureRegion){
+
+			@Override
+			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,
+					float pTouchAreaLocalX, float pTouchAreaLocalY) {
+				Intent i = new Intent(CheckersMainMenu.this, EntryScreenActivity.class);		        
+		        startActivity(i);
+				return true;
+			}
+			
+		};
         
 		this.mMainScene.getTopLayer().addEntity(playSprite);
+		this.mMainScene.getTopLayer().addEntity(scoreloopSprite);
 		this.mMainScene.registerTouchArea(playSprite);
+		this.mMainScene.registerTouchArea(scoreloopSprite);
         this.mMainScene.setTouchAreaBindingEnabled(true);
 
 		return this.mMainScene;

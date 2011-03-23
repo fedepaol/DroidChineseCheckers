@@ -22,13 +22,16 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
+import com.scoreloop.client.android.ui.EntryScreenActivity;
 import com.whiterabbit.checkers.R;
 import com.whiterabbit.checkers.boards.BoardKind;
 
@@ -38,6 +41,7 @@ import com.whiterabbit.checkers.boards.BoardKind;
 public class BoardsListActivity extends ListActivity {
     ArrayList<BoardKind> mBoards;
     MyArrayAdapter mAdapter;
+    Button mScoreloopButton;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,19 @@ public class BoardsListActivity extends ListActivity {
         mBoards = BoardKind.getAllBoards();
         
         mAdapter = new MyArrayAdapter(this, R.layout.board_list_elem, mBoards);
+        mScoreloopButton = (Button) findViewById(R.id.scoreloop_button);
         
+        
+        mScoreloopButton.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+	             startActivity(new Intent(BoardsListActivity.this, EntryScreenActivity.class));
+				
+			}
+
+			
+        	
+        });
         this.setListAdapter(mAdapter);
     }
     

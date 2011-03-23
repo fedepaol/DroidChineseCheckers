@@ -54,4 +54,17 @@ public class BoardClassic extends BoardKind {
 		return map;
 	}
 
+
+	@Override
+	public
+	int getMode() {
+		return 0;
+	}
+
+
+	@Override
+	public String getAchievement() {
+		return "com.pegdroid.englishstandard";	
+	}
+
 }

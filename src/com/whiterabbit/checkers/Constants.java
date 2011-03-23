@@ -18,7 +18,7 @@ package com.whiterabbit.checkers;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
 import android.util.DisplayMetrics;
-
+ 
 
 public class Constants {
  

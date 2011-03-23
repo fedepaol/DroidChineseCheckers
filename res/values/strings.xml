@@ -26,6 +26,8 @@
     <string name="new_record">New Record!</string>
     <string name="no_more_moves">No more moves available. \nRemaining balls %d. Do you want to start new game?</string>
     <string name="no_more_moves_record">Remaining balls: %1$d \nOld Record: %2$d\nDo you want to start new game?</string>
-
+	<string name="achievement">New Achievement!</string>
+	<string name="check_leaderboard">Scores</string>
+	<string name="you_are_now_master_of">You are now master of %s</string>
     
 </resources>
