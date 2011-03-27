@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- DO NOT EDIT - THIS FILE WAS GENERATED WITHIN AN EXPORT OF YOUR GAMES LIST OF AWARDS -->
+<!-- WITH EDITING THIS FILE YOU WILL MAKE IT UNPROCESSABLE (CHECKSUM ERRORS) -->
+<!--  -->
+<!-- File was generated on Mon Mar 21 23:24:20 +0000 2011 -->
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en_US</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.scoreloop.awardsbundle</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>SLAwards</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>SCOL</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>SLAchievableListIdentifier</key>
+	<string>e439a16d-622a-4f39-b017-a0e67082b02c</string>
+	<key>SLAwards</key>
+	<array>
+		<dict>
+			<key>counterRange</key>
+			<string>{0, 1}</string>
+			<key>identifier</key>
+			<string>com.pegdroid.englishstandard</string>
+			<key>importance</key>
+			<integer>0</integer>
+			<key>rewardMoney</key>
+			<dict>
+				<key>amount</key>
+				<integer>0</integer>
+				<key>currency</key>
+				<string>XSR</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>counterRange</key>
+			<string>{0, 1}</string>
+			<key>identifier</key>
+			<string>com.pegdroid.frenchstyle</string>
+			<key>importance</key>
+			<integer>0</integer>
+			<key>rewardMoney</key>
+			<dict>
+				<key>amount</key>
+				<integer>0</integer>
+				<key>currency</key>
+				<string>XSR</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>counterRange</key>
+			<string>{0, 1}</string>
+			<key>identifier</key>
+			<string>com.pegdroid.germany</string>
+			<key>importance</key>
+			<integer>0</integer>
+			<key>rewardMoney</key>
+			<dict>
+				<key>amount</key>
+				<integer>0</integer>
+				<key>currency</key>
+				<string>XSR</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>counterRange</key>
+			<string>{0, 1}</string>
+			<key>identifier</key>
+			<string>com.pegdroid.asymmetrical</string>
+			<key>importance</key>
+			<integer>0</integer>
+			<key>rewardMoney</key>
+			<dict>
+				<key>amount</key>
+				<integer>0</integer>
+				<key>currency</key>
+				<string>XSR</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>counterRange</key>
+			<string>{0, 1}</string>
+			<key>identifier</key>
+			<string>com.pegdroid.diamond</string>
+			<key>importance</key>
+			<integer>0</integer>
+			<key>rewardMoney</key>
+			<dict>
+				<key>amount</key>
+				<integer>0</integer>
+				<key>currency</key>
+				<string>XSR</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

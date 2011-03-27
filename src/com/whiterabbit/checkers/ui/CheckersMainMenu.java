@@ -1,5 +1,9 @@
 package com.whiterabbit.checkers.ui;
 
+import java.io.IOException;
+
+import org.anddev.andengine.audio.music.Music;
+import org.anddev.andengine.audio.music.MusicFactory;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.options.EngineOptions;
@@ -14,6 +18,7 @@ import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
+import org.anddev.andengine.util.Debug;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,7 +52,7 @@ public class CheckersMainMenu extends BaseGameActivity {
 	
 	protected TextureRegion mBackgroundTextureRegion;
 	protected Texture mBackgroundTexture;
-
+	
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -66,7 +71,7 @@ public class CheckersMainMenu extends BaseGameActivity {
 	    int height = Constants.getHeight(width, this); 
         this.mCamera = new Camera(0, 0, width, height);
 	    
-		return new Engine(new EngineOptions(true, ScreenOrientation.PORTRAIT, new RatioResolutionPolicy(width, height), this.mCamera));
+		return new Engine(new EngineOptions(true, ScreenOrientation.PORTRAIT, new RatioResolutionPolicy(width, height), this.mCamera).setNeedsMusic(true));
 	}
 
 	@Override
@@ -79,14 +84,12 @@ public class CheckersMainMenu extends BaseGameActivity {
 		this.mBackgroundTexture = new Texture(1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mBackgroundTextureRegion = TextureRegionFactory.createFromAsset(this.mBackgroundTexture, this, "gfx/menu_back.png", 0, 0);
 		this.mEngine.getTextureManager().loadTextures(this.mPlayTexture, this.mBackgroundTexture);
+		
+
 	}
 
 	@Override
 	public Scene onLoadScene() {
-		this.mEngine.registerUpdateHandler(new FPSLogger());
-
-		
-
 		/* Just a simple scene with an animated face flying around. */
 		this.mMainScene = new Scene(2);
 		this.mMainScene.getBottomLayer().addEntity(new Sprite(0, 0, mBackgroundTextureRegion));		
@@ -108,7 +111,7 @@ public class CheckersMainMenu extends BaseGameActivity {
 			@Override
 			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,
 					float pTouchAreaLocalX, float pTouchAreaLocalY) {
-				Intent i = new Intent(CheckersMainMenu.this, EntryScreenActivity.class);		        
+				Intent i = new Intent(CheckersMainMenu.this, EntryScreenActivity.class);	
 		        startActivity(i);
 				return true;
 			}
@@ -120,7 +123,7 @@ public class CheckersMainMenu extends BaseGameActivity {
 		this.mMainScene.registerTouchArea(playSprite);
 		this.mMainScene.registerTouchArea(scoreloopSprite);
         this.mMainScene.setTouchAreaBindingEnabled(true);
-
+        
 		return this.mMainScene;
 	}
 
@@ -128,6 +131,7 @@ public class CheckersMainMenu extends BaseGameActivity {
 	public void onLoadComplete() {
 
 	}
+
 
 
 	@Override

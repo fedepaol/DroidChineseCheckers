@@ -41,7 +41,6 @@ import com.whiterabbit.checkers.boards.BoardKind;
 public class BoardsListActivity extends ListActivity {
     ArrayList<BoardKind> mBoards;
     MyArrayAdapter mAdapter;
-    Button mScoreloopButton;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +49,7 @@ public class BoardsListActivity extends ListActivity {
         mBoards = BoardKind.getAllBoards();
         
         mAdapter = new MyArrayAdapter(this, R.layout.board_list_elem, mBoards);
-        mScoreloopButton = (Button) findViewById(R.id.scoreloop_button);
         
-        
-        mScoreloopButton.setOnClickListener(new View.OnClickListener(){
-			@Override
-			public void onClick(View v) {
-	             startActivity(new Intent(BoardsListActivity.this, EntryScreenActivity.class));
-				
-			}
-
-			
-        	
-        });
         this.setListAdapter(mAdapter);
     }
     
