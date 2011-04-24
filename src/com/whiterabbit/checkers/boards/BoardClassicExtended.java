@@ -61,7 +61,7 @@ public class BoardClassicExtended extends BoardKind {
 	@Override
 	public
 	int getMode() {
-		return 2;
+		return 7;
 	}
 
 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    style="@style/ResultView">
+
+<View style="@style/ResultSeparator" />
+
+<TextView
+	style="@style/ResultTitle"
+	android:id="@+id/result_title"/> 
+
+<TextView
+	style="@style/ResultMessage"
+	android:id="@+id/result_message"/>  
+ 				
+
+	    
+<TableLayout android:id="@+id/stall_view" 
+             android:layout_width="fill_parent" 
+             android:layout_height="fill_parent"
+             android:stretchColumns="0,1"
+             style="@style/ResultButtons"
+             xmlns:android="http://schemas.android.com/apk/res/android">
+	
+	<TableRow>
+		<Button android:id="@+id/result_btn_playagain"
+	        style="@style/ResultButton"
+	        android:text="@string/play_again"
+	        android:drawableTop="@drawable/diamond"/>
+	        
+	    <Button android:id="@+id/result_btn_return_to_list"
+	        style="@style/ResultButton"
+	        android:text="@string/back"
+	        android:drawableTop="@drawable/diamond"/>
+	</TableRow>
+	
+	<View style="@style/ResultSeparator" />
+	
+	<TableRow>
+		 	<Button android:id="@+id/result_btn_scores"
+        style="@style/ResultButton"
+        android:text="@string/check_leaderboard"
+        android:drawableTop="@drawable/diamond"
+    />
+    <Button android:id="@+id/result_btn_share_with_a_friend"
+        style="@style/ResultButton"
+        android:text="@string/tell_a_friend"
+        android:drawableTop="@drawable/diamond"/>
+    </TableRow>
+    
+    <View style="@style/ResultSeparator" />
+        
+    <TableRow>
+    
+    <Button android:id="@+id/result_btn_share_social"
+        style="@style/ResultButton"
+        android:text="@string/share_to_social"
+        android:drawableTop="@drawable/diamond"
+    />
+    <Button android:id="@+id/result_btn_empty"
+        style="@style/ResultButtonEmpty" />    
+	</TableRow>
+	
+	
+</TableLayout>
+</LinearLayout>

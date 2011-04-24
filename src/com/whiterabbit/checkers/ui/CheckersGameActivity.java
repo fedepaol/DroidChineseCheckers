@@ -20,17 +20,24 @@ package com.whiterabbit.checkers.ui;
 
 import java.io.IOException;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import org.anddev.andengine.audio.sound.Sound;
 import org.anddev.andengine.audio.sound.SoundFactory;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
+import org.anddev.andengine.engine.handler.timer.ITimerCallback;
+import org.anddev.andengine.engine.handler.timer.TimerHandler;
 import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.EngineOptions.ScreenOrientation;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.SpriteBackground;
 import org.anddev.andengine.entity.sprite.Sprite;
+import org.anddev.andengine.entity.text.ChangeableText;
 import org.anddev.andengine.entity.util.FPSLogger;
+import org.anddev.andengine.opengl.font.Font;
+import org.anddev.andengine.opengl.font.FontFactory;
 import org.anddev.andengine.opengl.texture.Texture;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
@@ -45,16 +52,19 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import com.admob.android.ads.AdManager;
-import com.admob.android.ads.AdView;
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.scoreloop.client.android.core.model.Achievement;
+import com.scoreloop.client.android.core.model.Score;
 import com.scoreloop.client.android.ui.LeaderboardsScreenActivity;
 import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
 import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
@@ -75,6 +85,15 @@ import com.whiterabbit.checkers.ui.BackArrowSprite.BackInterface;
 public class CheckersGameActivity extends BaseGameActivity implements BackInterface, OnScoreSubmitObserver{
 
 	GoogleAnalyticsTracker tracker;
+	
+	public static final String TITLE = "Title";
+	public static final String MESSAGE = "Message";
+	public static final String BOARD = "Board";
+	public static final String MODE = "Mode";
+	public static final String REMAINING_BALLS = "Balls";
+	public static final String SECONDS = "Seconds";
+	public static final String ACHIEVEMENT = "Achievement";
+	
 
     private Camera mCamera;
     CheckersSpriteFactory mSpriteFactory;
@@ -87,10 +106,15 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     private int mAdMobOffset = 0;
     private CheckersDbHelper db;
     private String mBoardName;
-    
-    
-
+    private TimerHandler mTimerHandler;
+    private long mSecondsPlayed;
+    private Scene mScene;
     private Sound mMarbleSound;
+    
+    private Texture mFontTexture;
+	private Font mFont;
+	private ChangeableText mScoreText;
+
 
 
     private TextureRegion mBackgroundRegion;
@@ -128,6 +152,13 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
         tracker.start("UA-16514009-3", this);
         tracker.trackPageView(mBoardName);
         tracker.dispatch();
+        mSecondsPlayed = 0;
+        
+        mTimerHandler = new TimerHandler(1.0f, true, new ITimerCallback() {
+            public void onTimePassed(TimerHandler pTimerHandler) {
+            	mSecondsPlayed++;
+            	CheckersGameActivity.this.mScoreText.setText(getShortTimeFromSeconds(mSecondsPlayed));
+        }});
 
         super.onCreate(pSavedInstanceState);
     }
@@ -173,6 +204,13 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
         this.mBackArrowRegion = TextureRegionFactory.createTiledFromAsset(this.mBackArrowTexture, this, "gfx/back_arrow.png", 0, 0,2,1);
         this.mBackArrowRegion.setCurrentTileIndex(BackArrowSprite.DISABLED_TILE);
 		this.mEngine.getTextureManager().loadTexture(this.mBackArrowTexture);
+		
+		FontFactory.setAssetBasePath("font/");
+		this.mFontTexture = new Texture(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mFont = FontFactory.createFromAsset(this.mFontTexture, this, "acme.ttf", 32, true, Color.WHITE);
+		
+		this.mEngine.getTextureManager().loadTexture(this.mFontTexture);
+		this.mEngine.getFontManager().loadFont(this.mFont);
 
     }
 
@@ -192,6 +230,18 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
         scene.registerTouchArea(mBackArrow);
                 
         scene.setTouchAreaBindingEnabled(true);
+        
+        mSecondsPlayed = mBoardType.getSavedTime();
+        
+        scene.registerUpdateHandler(mTimerHandler);
+        mScene = scene;
+        
+        /* The ScoreText showing how many points the player scored. */
+		this.mScoreText = new ChangeableText(10, 10, this.mFont, "", "00:00".length());
+		this.mScoreText.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		this.mScoreText.setAlpha(0.5f);
+		scene.getLayer(Constants.SCORE_LAYER).addEntity(this.mScoreText);
+        
         return scene;
     }
 
@@ -199,13 +249,19 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     public void onLoadComplete() {
 
     }
+    
+
 
     @Override
     protected void onPause() {
         db.close();
-        if(!mFinishing && mBoard.getScore() > 0){
-            mBoardType.saveDump(mBoard.serialize(), mBoard.getScore(), this);
-            CheckersDbHelper.setLastBoardUsed(mBoardName, this);
+        if(!mFinishing){
+        	stopTimer();	//otherwise I already stopped it
+        	
+        	if(mBoard.getScore() > 0){	// Only if I did a move
+        		mBoardType.saveDump(mBoard.serialize(), mBoard.getScore(), mSecondsPlayed, this);
+        		CheckersDbHelper.setLastBoardUsed(mBoardName, this);
+        	}
         }
         super.onPause();
     }
@@ -213,10 +269,16 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     @Override
     protected void onResume() {
         db.open();
+        mFinishing = false;
+        if(!mLoadSaved){
+        	mSecondsPlayed = 0;
+        }
         super.onResume();
     }
     
-
+    private void stopTimer(){
+    	mScene.unregisterUpdateHandler(mTimerHandler);
+    }
 
     @Override
     protected void onRestart() {
@@ -226,57 +288,91 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     
     
     private int getOldScore(){
-        return db.getBoardMaxScore(mBoardName);         
+        return db.getBoardMaxScore(mBoardName).maxScore;         
+    }
+    
+    
+    private int getOldTime(){
+        return db.getBoardMaxScore(mBoardName).minTime;         
     }
     
     /**
      * Behaviour to be performed when no more moves are available
      */
     public void onGameStall(long thisGameScore){ 
-        String button1String = getString(R.string.new_game); 
-        String cancelString = getString(R.string.back);
-        String checkLeaderboardString = getString(R.string.check_leaderboard);
+    	stopTimer();
+        
         AlertDialog.Builder ad = new AlertDialog.Builder(this); 
 
         long oldScore = getOldScore();
+        long oldTime = getOldTime();
+        long secondsPlayed = mSecondsPlayed;
         
-        setDialogMessage(thisGameScore, oldScore , ad);
-        
-        // Relaunch the same game
-        ad.setPositiveButton(button1String,
-                             new OnClickListener() { 
-                                public void onClick(DialogInterface dialog, int arg1) {
-                                    mFinishing = true;
-                                    launch(CheckersGameActivity.this, mBoardType.getName());
-                                    CheckersGameActivity.this.finish();
-                                } });    
+        StringBuffer title = new StringBuffer();
+        StringBuffer message = new StringBuffer();
+        setDialogMessage(title, message, thisGameScore, oldScore, secondsPlayed, oldTime, ad);
         
         
-        // Returns to board list
-        ad.setNegativeButton(cancelString,
-                new OnClickListener() { 
-                   public void onClick(DialogInterface dialog, int arg1) {
-                       mFinishing = true;
-                       CheckersGameActivity.this.finish();
-                   } });
+        Intent intent = new Intent(this, CheckersStallActivity.class);
+        intent.putExtra(TITLE, title.toString());
+        intent.putExtra(MESSAGE, message.toString());
+        intent.putExtra(BOARD, mBoardType.getName());
+        intent.putExtra(MODE, mBoardType.getMode());
         
-        // goes to scoreloop leaderboard
-        ad.setNeutralButton(checkLeaderboardString, new OnClickListener() { 
-            public void onClick(DialogInterface dialog, int arg1) {
-                mFinishing = true;
-                final Intent intent = new Intent(CheckersGameActivity.this, LeaderboardsScreenActivity.class);
-                intent.putExtra(LeaderboardsScreenActivity.MODE, mBoardType.getMode()); 
-                startActivity(intent);
-                CheckersGameActivity.this.finish();
-            } });   
-        
-        
-        ad.show();
+        mFinishing = true;
         mBoardType.delete(this);
-        db.setBoardMaxScore(mBoardName, thisGameScore);
+        if(isBetterResult(thisGameScore, oldScore, secondsPlayed, oldTime)){
+        	db.setBoardMaxScore(mBoardName, thisGameScore, secondsPlayed);
+        	long remainingBalls = mBoardType.getRemainingBallsFromScore(thisGameScore);
+        	
+        	intent.putExtra(REMAINING_BALLS, remainingBalls);
+            intent.putExtra(SECONDS, secondsPlayed);
+            intent.putExtra(ACHIEVEMENT, mBoardType.getAchievement());
+        }
+        
+        startActivity(intent);
+        finish();
         return;    
     }
 
+
+    /** 
+     * Tells if newscore is better than older
+     * @param newScore
+     * @param oldScore
+     * @param newTime
+     * @param oldTime
+     * @return
+     */
+    private boolean isBetterResult(long newScore, long oldScore, long newTime, long oldTime){
+    	if(newScore > oldScore)
+    		return true;
+    	    	
+    	if(newScore == oldScore){
+    		if(newTime < oldTime || oldTime == 0){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    
+    public static String getTimeFromSeconds(long seconds){
+    	long minutes = seconds / 60;
+    	long secs = seconds % 60;
+    	if(minutes == 0){
+    		return String.format("%d sec", secs);
+    	}else{
+    		return String.format("%d min %d sec", minutes, secs);
+    	}
+    }
+    
+    private String getShortTimeFromSeconds(long seconds){
+    	long minutes = seconds / 60;
+    	long secs = seconds % 60;
+    	return String.format("%02d:%02d", minutes, secs);
+    	
+    }
     
     /**
      * Sets board finished dialog message
@@ -284,64 +380,55 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
      * @param oldScore
      * @param ad
      */
-    private void setDialogMessage(long newScore, long oldScore, AlertDialog.Builder ad){
-    	if(newScore > oldScore){
-        	
+    private void setDialogMessage(StringBuffer title, StringBuffer message, long newScore, long oldScore, long newTime, long oldTime, AlertDialog.Builder ad){
+        if(isBetterResult(newScore, oldScore, newTime, oldTime)){        	
         	long remainingBalls = mBoardType.getRemainingBallsFromScore(newScore);
-        	notifyScoreLoop(remainingBalls);
         	
-        	if(remainingBalls == 1){
-        		ad.setTitle(getString(R.string.achievement));
-        		ad.setMessage(String.format(getString(R.string.you_are_now_master_of), mBoardType.getName()));
+        	if(remainingBalls == 1 && newScore != oldScore){
+        		title.append(getString(R.string.achievement));
+        		message.append(String.format(getString(R.string.you_are_now_master_of), mBoardType.getName()));
         	}else{
-        		ad.setTitle(getString(R.string.new_record));
-        		ad.setMessage(String.format(getString(R.string.no_more_moves_record), mBoardType.getRemainingBallsFromScore(newScore), 
-            																	  mBoardType.getRemainingBallsFromScore(oldScore)));
+        		title.append(getString(R.string.new_record));
+        		
+        		if(newScore > oldScore || oldTime == 0){
+        			message.append(String.format(getString(R.string.no_more_moves_record), mBoardType.getRemainingBallsFromScore(newScore), 
+            																	  mBoardType.getRemainingBallsFromScore(oldScore), getTimeFromSeconds(newTime)));
+        		}else{	// newScore == oldScore
+        			message.append(String.format(getString(R.string.no_more_moves_record_time), mBoardType.getRemainingBallsFromScore(newScore), 
+							  getTimeFromSeconds(newTime), getTimeFromSeconds(oldTime)));
+        		}
         	}
         }else{
-            ad.setTitle(getString(R.string.stall));
-            ad.setMessage(String.format(getString(R.string.no_more_moves), mBoardType.getRemainingBallsFromScore(newScore)));
+            title.append(getString(R.string.stall));
+            message.append(String.format(getString(R.string.no_more_moves), mBoardType.getRemainingBallsFromScore(newScore)));
         }
+        
+        ad.setTitle(title);
+        ad.setMessage(message);
     }
     
     
-    /**
-     * Sends result to scoreloop
-     * @param remainingBalls
-     */
-    private void notifyScoreLoop(long remainingBalls){
-    	Double scoreResult = Double.valueOf(remainingBalls);			
-		ScoreloopManagerSingleton.get().onGamePlayEnded(scoreResult, new Integer(mBoardType.getMode()));
-    	
-		if(remainingBalls == 1){
-			Achievement _achievement;
-			_achievement = ScoreloopManagerSingleton.get().getAchievement(mBoardType.getAchievement());
-	        ScoreloopManagerSingleton.get().achieveAward(_achievement.getAward().getIdentifier(), true, true);
-			
-		}
-    }
+    
 
     protected boolean showInCenter=true;
     protected boolean testMode=true;
 
     @Override
     protected void onSetContentView() {
-        if(testMode){
-            AdManager.setTestDevices( new String[] { 
-                    AdManager.TEST_EMULATOR, 
-                    "FDF5AA30500D9CBDE7CC910D1A529F77", 
-                    } );
-        }
+        
         
         final RelativeLayout relativeLayout = new RelativeLayout(this);
         final FrameLayout.LayoutParams relativeLayoutLayoutParams = 
                             new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 
-        final AdView adView = new AdView(this);
+        final AdView adView = new AdView(this, AdSize.BANNER, "a14d2ccfb20d9cd");
+
         adView.refreshDrawableState();
         adView.setVisibility(View.VISIBLE);
-        adView.requestFreshAd();
-        adView.setRequestInterval(30);
+        AdRequest req = new AdRequest();
+
+        adView.loadAd(req);
+
         
 
         this.mRenderSurfaceView = new RenderSurfaceView(this);

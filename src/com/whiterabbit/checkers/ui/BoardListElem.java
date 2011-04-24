@@ -66,7 +66,16 @@ public class BoardListElem extends TableLayout {
         }else{
             mSavedIndicator.setImageResource(R.drawable.saved);
         }
-        mMaxScore.setText(String.valueOf(board.getMinRemainingBalls()));
+        
+        long seconds = board.getMinTime();
+        
+        if(seconds == 0){
+        	mMaxScore.setText(String.valueOf(board.getMinRemainingBalls()));
+        }else{
+        	String message = String.format("%d in %s", board.getMinRemainingBalls(), CheckersGameActivity.getTimeFromSeconds(seconds));
+        	
+        	mMaxScore.setText(message);
+        }
         
         mBoardImg.setImageResource(board.getImageResource());        
     }

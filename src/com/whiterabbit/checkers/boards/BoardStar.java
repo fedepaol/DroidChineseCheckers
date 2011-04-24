@@ -59,7 +59,7 @@ public class BoardStar extends BoardKind {
 	@Override
 	public
 	int getMode() {
-		return 4;
+		return 9;
 	}
 
 

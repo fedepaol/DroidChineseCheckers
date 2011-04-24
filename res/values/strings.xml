@@ -17,17 +17,24 @@
 <resources>
     <string name="app_name">PegDroid</string>
     <string name="new_game">New</string>
+    <string name="play_again">Play again</string>
     <string name="restore_game">Restore</string>
-    <string name="back">Back</string>
+    <string name="back">Another board</string>
+    <string name="ok">Ok</string>
     <string name="max_score_name">Best Balls Left:</string>
     <string name="do_you_want_to_restore">Do you want to restore previously saved game?</string>
     <string name="starting_new_game">Do you want to start new game?</string>
     <string name="stall">Stall</string>
     <string name="new_record">New Record!</string>
     <string name="no_more_moves">No more moves available. \nRemaining balls %d. Do you want to start new game?</string>
-    <string name="no_more_moves_record">Remaining balls: %1$d \nOld Record: %2$d\nDo you want to start new game?</string>
+    <string name="no_more_moves_record">Remaining balls: %1$d\n in %3$s\nOld Record: %2$d balls\nDo you want to start new game?</string>
 	<string name="achievement">New Achievement!</string>
 	<string name="check_leaderboard">Scores</string>
+	<string name="share_to_social">Share your result</string>
+	<string name="tell_a_friend">Tell a friend</string>
 	<string name="you_are_now_master_of">You are now master of %s</string>
+	<string name="no_more_moves_record_time">Remaining balls: %1$d \nOld record time: %2$s\nNew record time: %3$s\nDo you want to start new game?</string>
+	<string name="update">New update:\nComplete a board faster to get a better score!\nChallenge people from all over the world on scoreloop</string>
+	
     
 </resources>

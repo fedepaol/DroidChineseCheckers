@@ -6,7 +6,12 @@
 		<item>French Style</item>
 		<item>Germany</item>
 		<item>Asymmetrical</item>
-		<item>Diamond</item>
+		<item>Diamond</item>		
+		<item>English Standard Timed</item>
+		<item>French Style Timed</item>
+		<item>Germany Timed</item>
+		<item>Asymmetrical Timed</item>
+		<item>Diamond Timed</item>
 	</string-array>
 		
 </resources>

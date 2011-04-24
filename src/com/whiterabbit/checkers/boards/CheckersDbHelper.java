@@ -22,6 +22,17 @@ import android.database.Cursor;
 
 
 public class CheckersDbHelper extends CheckersStorage {
+	public class ScoreRes{
+		public int maxScore;
+		public int minTime;
+		public ScoreRes(int maxScore, int minTime) {
+			super();
+			this.maxScore = maxScore;
+			this.minTime = minTime;
+		}
+	}
+	
+	
     public static final String PREF_NAME = "Preferences";
     public static final String LAST_BOARD_USED = "LastBoard";
     
@@ -36,7 +47,8 @@ public class CheckersDbHelper extends CheckersStorage {
                     BOARD_SAVEDDATE_KEY,
                     BOARD_WIDTH_KEY,
                     BOARD_HEIGTH_KEY,
-                    BOARD_SCORE_KEY}, BOARD_NAME_KEY + " = '" + name + "'", null, null, null, null);
+                    BOARD_SCORE_KEY,
+                    BOARD_TIME_KEY}, BOARD_NAME_KEY + " = '" + name + "'", null, null, null, null);
         if(res != null){
             res.moveToFirst();
         }
@@ -65,35 +77,38 @@ public class CheckersDbHelper extends CheckersStorage {
     /**
      * Returns the max score of the given board
      */
-    public int getBoardMaxScore(String name){
+    public ScoreRes getBoardMaxScore(String name){
         Cursor res = mDb.query(BOARDSCORE_TABLE, new String[] {
                     BOARDSCORE_ROW_ID,
                     BOARDSCORE_NAME_KEY,
-                    BOARDSCORE_MAXSCORE_KEY}, BOARDSCORE_NAME_KEY + " = '" + name + "'", null, null, null, null);
+                    BOARDSCORE_MAXSCORE_KEY,
+                    BOARDSCORE_MINTIME_KEY}, BOARDSCORE_NAME_KEY + " = '" + name + "'", null, null, null, null);
         
         if(res == null)
-            return 0;
+            return new ScoreRes(0,0);
         
         res.moveToFirst();
         if(res.getCount() <= 0){
             res.close();
-            return 0;
+            return new ScoreRes(0,0);
         }
         
         int result = res.getInt(BOARDSCORE_MAXSCORE_COLUMN);
+        int minTime = res.getInt(BOARDSCORE_MINTIME_COLUMN);
         res.close();
-        return result;
+        return new ScoreRes(result, minTime);
     }
     
-    public void setBoardMaxScore(String name, long maxScore){
+    public void setBoardMaxScore(String name, long maxScore, long minTime){
         String where = BOARDSCORE_NAME_KEY + " = '" + name + "'";
         ContentValues contentValues = new ContentValues();
         contentValues.put(BOARDSCORE_NAME_KEY, name);
         contentValues.put(BOARDSCORE_MAXSCORE_KEY, maxScore);
+        contentValues.put(BOARDSCORE_MINTIME_KEY, minTime);
         int updated = mDb.update(BOARDSCORE_TABLE, contentValues, where, null);
         
         if(updated <= 1){
-            addBoardScore(name, Long.valueOf(maxScore));
+            addBoardScore(name, Long.valueOf(maxScore), Long.valueOf(minTime));
         }
         
         

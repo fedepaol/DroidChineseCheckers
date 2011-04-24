@@ -20,20 +20,18 @@ import com.whiterabbit.checkers.R;
 
 
 
-public class BoardAsymmetrical extends BoardKind {
-    public final static String NAME = "Asymmetrical";
+public class SixBySixBoard extends BoardKind {
+    public final static String NAME = "6x6";
     
     
     private final char[][] map = {   
-            {'0','0','1', '1', '1', '0','0','0'},
-            {'0','0','1', '1', '1', '0','0','0'},
-            {'0','0','1', '1', '1', '0','0','0'},
-            {'1','1','1', '1', '1', '1','1','1'},
-            {'1','1','1', 'X', '1', '1','1','1'},
-            {'1','1','1', '1', '1', '1','1','1'},
-            {'0','0','1', '1', '1', '0','0','0'},
-            {'0','0','1', '1', '1', '0','0','0'}};
-
+            
+            {'1','1', '1', '1', '1','1'},
+            {'1','1', '1', '1', '1','1'},
+            {'1','1', '1', '1', 'X','1'},
+            {'1','1', '1', '1', '1','1'},
+            {'1','1', '1', '1', '1','1'},
+            {'1','1', '1', '1', '1','1'}};
 
 
     @Override
@@ -45,9 +43,9 @@ public class BoardAsymmetrical extends BoardKind {
 
     @Override
     public int getImageResource() {
-        return R.drawable.fava; 
+        return R.drawable.frenchstyle;
     }
-
+    
 	@Override
 	char[][] getMap() {
 		return map;
@@ -58,12 +56,14 @@ public class BoardAsymmetrical extends BoardKind {
 	@Override
 	public
 	int getMode() {
-		return 8 ;
+		return 11;
 	}
-	
-	
-	public String getAchievement(){
-		return "com.pegdroid.asymmetrical";
+
+
+
+	@Override
+	public String getAchievement() {
+		return "com.pegdroid.6x6";
 	}
 
 }

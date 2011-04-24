@@ -22,16 +22,15 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
-import com.scoreloop.client.android.ui.EntryScreenActivity;
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 import com.whiterabbit.checkers.R;
 import com.whiterabbit.checkers.boards.BoardKind;
 
@@ -49,6 +48,11 @@ public class BoardsListActivity extends ListActivity {
         mBoards = BoardKind.getAllBoards();
         
         mAdapter = new MyArrayAdapter(this, R.layout.board_list_elem, mBoards);
+        
+        
+        AdView adView = (AdView)this.findViewById(R.id.adView);
+        AdRequest req = new AdRequest();
+        adView.loadAd(req);    
         
         this.setListAdapter(mAdapter);
     }

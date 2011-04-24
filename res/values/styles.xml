@@ -3,8 +3,9 @@
 
   <style name="BoardList">
   	<item name="android:background">@drawable/back</item>
-  	
   </style>
+   	
+
   <style name="BoardListElem">    
     <item name="android:background">@color/transparent</item>
     <item name="android:paddingLeft">10dip</item>
@@ -32,9 +33,62 @@
   <style name="BoardListElemScore">
   	<item name="android:layout_width">wrap_content</item>
   	<item name="android:textSize">12dip</item>
-	<item name="android:textColor">@color/light_grey</item>
-    
+	<item name="android:textColor">@color/light_grey</item>    
   </style>
   
+  <style name="ResultTitle">
+  	<item name="android:layout_width">wrap_content</item>
+  	<item name="android:layout_height">wrap_content</item>
+  	<item name="android:layout_gravity">center_horizontal</item>
+  	<item name="android:textSize">36dip</item>
+	<item name="android:textColor">@color/light_grey</item>    
+  </style>
+
+  <style name="ResultMessage">
+  	<item name="android:layout_width">wrap_content</item>
+  	<item name="android:layout_height">wrap_content</item>
+  	<item name="android:layout_gravity">center_horizontal</item>
+  	<item name="android:textSize">24dip</item>
+  	<item name="android:paddingLeft">12dip</item>
+  	<item name="android:paddingRight">12dip</item>
+	<item name="android:textColor">@color/light_grey</item>    
+  </style>  
+  
+  <style name="ResultView">
+  	<item name="android:background">@drawable/back</item>	
+  	<item name="android:gravity">center</item>  	
+  </style>
+  
+  <style name="ResultButtons">
+	<item name="android:gravity">bottom</item>
+  </style>
+  
+  <style name="ResultDescription">
+  	<item name="android:layout_width">wrap_content</item>
+  	<item name="android:textSize">12dip</item>
+	<item name="android:textColor">@color/light_grey</item>    
+  </style>
+  
+  <style name="ResultButton">
+  	<item name="android:layout_gravity">center</item>
+  	<item name="android:textSize">12dip</item>
+	<item name="android:textColor">@color/light_grey</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textStyle">bold</item>
+    
+    <item name="android:background">@null</item>
+  </style>  
+
+  <style name="ResultButtonEmpty">
+  	<item name="android:layout_gravity">center</item>
+  	<item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@null</item>
+  </style>  
+
+  <style name="ResultSeparator">
+  	<item name="android:layout_height">12dip</item>
+  	<item name="android:background">@null</item>
+  	<item name="android:layout_width">wrap_content</item>
+  </style>    
   
 </resources>

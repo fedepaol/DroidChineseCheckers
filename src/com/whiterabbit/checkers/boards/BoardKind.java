@@ -21,12 +21,16 @@ import java.util.Date;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.whiterabbit.checkers.boards.CheckersDbHelper.ScoreRes;
+
 
 public abstract class BoardKind {
     String mSavedDump;
     Date mSavedDate;
     Long mSavedScore;
+    Long mSavedTime;
     long mMaxScore = 0;
+    long mMinTime = 0;
     Long rowId;
     Boolean mLoaded = false;
     long mBallNumber = 0;
@@ -48,7 +52,7 @@ public abstract class BoardKind {
     public abstract int getImageResource();
     public abstract String getName();
     
-    public void saveDump(String dump, long score, Context ctx){
+    public void saveDump(String dump, long score, long time, Context ctx){
         CheckersDbHelper db = new CheckersDbHelper(ctx);
         db.open();
         Cursor saved = db.getSavedBoard(getName());
@@ -56,11 +60,13 @@ public abstract class BoardKind {
             db.updateBoard(saved.getLong(0), 
                     getName(), dump, new Date(), Long.valueOf(getWidth()), 
                     Long.valueOf(getHeight()),
-                    Long.valueOf(score));
+                    Long.valueOf(score),
+                    Long.valueOf(time));
         }else{
             db.addBoard(getName(), dump, new Date(), Long.valueOf(getWidth()), 
                     Long.valueOf(getHeight()),
-                    Long.valueOf(score));
+                    Long.valueOf(score),
+                    Long.valueOf(time));
         }
         db.close();
         saved.close();        
@@ -79,7 +85,16 @@ public abstract class BoardKind {
     }
     
     public Long getSavedScore(){
-        return mSavedScore;
+  		return mSavedScore;
+    
+    }
+    
+    public Long getSavedTime(){
+    	if(mSavedTime != null){
+    		return mSavedTime;
+    	}else{
+    		return Long.valueOf(0);
+    	}
     }
     
     /**
@@ -95,7 +110,10 @@ public abstract class BoardKind {
         CheckersDbHelper db = new CheckersDbHelper(ctx);
         db.open();
         
-        mMaxScore = Long.valueOf(db.getBoardMaxScore(getName()));
+        ScoreRes maxScore = db.getBoardMaxScore(getName());
+        
+        mMaxScore = Long.valueOf(maxScore.maxScore);
+        mMinTime = Long.valueOf(maxScore.minTime);
 
         Cursor saved = db.getSavedBoard(getName());
         if(saved.getCount() > 0){
@@ -103,7 +121,8 @@ public abstract class BoardKind {
             mSavedDump =  saved.getString(CheckersStorage.BOARD_DUMP_COLUMN);
             mLoaded = true;
             mSavedDate = new Date(saved.getInt(CheckersStorage.BOARD_SAVEDDATE_COLUMN)); 
-            mSavedScore = saved.getLong(CheckersStorage.BOARD_SCORE_COLUMN); 
+            mSavedScore = saved.getLong(CheckersStorage.BOARD_SCORE_COLUMN);
+            mSavedTime = saved.getLong(CheckersStorage.BOARD_TIME_COLUMN);
             saved.close();
             db.close();
             return true;
@@ -192,6 +211,14 @@ public abstract class BoardKind {
     	return getBallNumber() - this.getMaxScore();
     }
     
+    /**
+     * returns min time for best record
+     * @return
+     */
+    public long getMinTime(){
+    	return mMinTime;
+    }
+    
     
     public int getWidthFromMap(char[][] map) {
         return map[0].length;   // Here I am assuming squared maps
@@ -225,6 +252,19 @@ public abstract class BoardKind {
             return new BoardAsymmetrical();
         }
         
+        if(name.equals(SixBySixBoard.NAME)){
+            return new SixBySixBoard();
+        }
+
+        if(name.equals(Board32Diamond.NAME)){
+            return new Board32Diamond();
+        }
+        if(name.equals(NineByNineBoard.NAME)){
+            return new NineByNineBoard();
+        }
+        if(name.equals(WieglebBoard.NAME)){
+            return new WieglebBoard();
+        }
         return null;
     }
     
@@ -235,6 +275,10 @@ public abstract class BoardKind {
         res.add(getBoardFromName(BoardClassic.NAME));
         res.add(getBoardFromName(BoardClassicEng.NAME));
         res.add(getBoardFromName(BoardStar.NAME));
+        res.add(getBoardFromName(SixBySixBoard.NAME));
+        res.add(getBoardFromName(Board32Diamond.NAME));
+        res.add(getBoardFromName(NineByNineBoard.NAME));
+        res.add(getBoardFromName(WieglebBoard.NAME));
         //res.add(getBoardFromName(BoardS.NAME));
 
         return res;

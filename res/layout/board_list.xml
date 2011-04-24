@@ -14,14 +14,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"	
+	xmlns:ads="http://schemas.android.com/apk/res/com.whiterabbit.checkers"
+	
+
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center_horizontal"
-    style="@style/BoardList"    
+    style="@style/BoardList"
     >
-    
+<com.google.ads.AdView android:id="@+id/adView"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         ads:adUnitId="a14d2ccfb20d9cd"
+                         ads:adSize="BANNER"/>                             
 <ListView android:id="@android:id/list" 
 		android:layout_width="fill_parent" 
 		android:layout_height="fill_parent"
@@ -31,6 +38,9 @@
 		>
 </ListView>
 
+
+
 </LinearLayout>
+
 
 

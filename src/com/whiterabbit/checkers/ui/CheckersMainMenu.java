@@ -1,9 +1,5 @@
 package com.whiterabbit.checkers.ui;
 
-import java.io.IOException;
-
-import org.anddev.andengine.audio.music.Music;
-import org.anddev.andengine.audio.music.MusicFactory;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.options.EngineOptions;
@@ -11,14 +7,12 @@ import org.anddev.andengine.engine.options.EngineOptions.ScreenOrientation;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
-import org.anddev.andengine.entity.util.FPSLogger;
 import org.anddev.andengine.input.touch.TouchEvent;
 import org.anddev.andengine.opengl.texture.Texture;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
-import org.anddev.andengine.util.Debug;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +20,7 @@ import android.os.Bundle;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.scoreloop.client.android.ui.EntryScreenActivity;
 import com.whiterabbit.checkers.Constants;
+
 
 
 public class CheckersMainMenu extends BaseGameActivity {
@@ -141,7 +136,7 @@ public class CheckersMainMenu extends BaseGameActivity {
         tracker.start("UA-16514009-3", this);
         tracker.trackPageView("/main");
         tracker.dispatch();
-
+        
         super.onCreate(pSavedInstanceState);
     }
     
@@ -156,9 +151,4 @@ public class CheckersMainMenu extends BaseGameActivity {
     
 	
 
-	
-
-	// ===========================================================
-	// Inner and Anonymous Classes
-	// ===========================================================
 }

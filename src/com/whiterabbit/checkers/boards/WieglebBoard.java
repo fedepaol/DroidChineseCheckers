@@ -20,19 +20,21 @@ import com.whiterabbit.checkers.R;
 
 
 
-public class BoardAsymmetrical extends BoardKind {
-    public final static String NAME = "Asymmetrical";
+public class WieglebBoard extends BoardKind {
+    public final static String NAME = "Wieglebs";
     
     
     private final char[][] map = {   
-            {'0','0','1', '1', '1', '0','0','0'},
-            {'0','0','1', '1', '1', '0','0','0'},
-            {'0','0','1', '1', '1', '0','0','0'},
-            {'1','1','1', '1', '1', '1','1','1'},
-            {'1','1','1', 'X', '1', '1','1','1'},
-            {'1','1','1', '1', '1', '1','1','1'},
-            {'0','0','1', '1', '1', '0','0','0'},
-            {'0','0','1', '1', '1', '0','0','0'}};
+    		{'0','0','0', 'X', 'X', 'X','0','0','0'},
+            {'0','0','0', 'X', '1', 'X','0','0','0'},
+            {'0','0','0', '1', 'X', '1','0','0','0'},
+            {'X','X','1', '1', '1', 'X','1','X','X'},
+            {'X','1','X', '1', 'X', '1','X','1','X'},
+            {'X','X','1', 'X', '1', 'X','1','X','X'},
+            {'0','0','0', '1', 'X', '1','0','0','0'},
+            {'0','0','0', 'X', '1', 'X','0','0','0'},
+            {'0','0','0', 'X', 'X', 'X','0','0','0'}};
+
 
 
 
@@ -43,11 +45,12 @@ public class BoardAsymmetrical extends BoardKind {
 
 
 
+
     @Override
     public int getImageResource() {
-        return R.drawable.fava; 
+        return R.drawable.german;
     }
-
+    
 	@Override
 	char[][] getMap() {
 		return map;
@@ -55,15 +58,22 @@ public class BoardAsymmetrical extends BoardKind {
 
 
 
+
 	@Override
 	public
 	int getMode() {
-		return 8 ;
+		return 12;
+	}
+
+
+
+
+	@Override
+	public String getAchievement() {
+		return "com.pegdroid.wiglebs";
 	}
 	
 	
-	public String getAchievement(){
-		return "com.pegdroid.asymmetrical";
-	}
+	
 
 }

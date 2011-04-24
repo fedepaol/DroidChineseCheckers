@@ -358,6 +358,7 @@ public class AndEngineBoard {
 	 */
 	public void postMoveOperations() {
 		mScore++;
+		mGame.onGameStall(mScore);	// TODO Remove me
 		for (int i = 0; i < mBoard.length; i++) {
 			for (int j = 0; j < mBoard[i].length; j++) {
 				if (canMove(i, j)) { // checks if at least one ball can be moved
