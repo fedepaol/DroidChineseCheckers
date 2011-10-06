@@ -28,11 +28,9 @@ public class Board32Diamond extends BoardKind {
     private final char[][] map = {   
     		{'0','0', '0', '1', '0','0','0'},
             {'0','0', '1', '1', '1','0','0'},
-            {'0','0', '1', '1', '1','0','0'},
             {'0','1', '1', '1', '1','1','0'},
             {'1','1', '1', 'X', '1','1','1'},
             {'0','1', '1', '1', '1','1','0'},
-            {'0','0', '1', '1', '1','0','0'},
             {'0','0', '1', '1', '1','0','0'},
             {'0','0', '0', '1', '0','0','0'}};
 
@@ -47,7 +45,7 @@ public class Board32Diamond extends BoardKind {
 
     @Override
     public int getImageResource() {
-        return R.drawable.diamond;
+        return R.drawable.smalldiamond;
     }
 
     

@@ -2,7 +2,12 @@ package com.whiterabbit.checkers.ui;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +21,7 @@ import com.scoreloop.client.android.ui.LeaderboardsScreenActivity;
 import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
 import com.scoreloop.client.android.ui.PostScoreOverlayActivity;
 import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
+import com.whiterabbit.checkers.PreferencesStore;
 import com.whiterabbit.checkers.R;
 
 
@@ -71,6 +77,8 @@ public class CheckersStallActivity extends Activity implements OnScoreSubmitObse
         if(mRemaining > 0)
         	notifyScoreLoop(mRemaining, mSeconds);
         
+        showVoteMeDialog();
+        
         setupMessage(mTitle, mMessage);
         super.onCreate(pSavedInstanceState);
     }
@@ -92,8 +100,8 @@ public class CheckersStallActivity extends Activity implements OnScoreSubmitObse
 		        tracker.dispatch();
 				Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
 				shareIntent.setType("text/plain");
-				shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check this game!");
-				shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Check this nice peg solitaire goo.gl/N6AsD");
+				shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.check_game));
+				shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.try_pegdroid));
 				startActivity(Intent.createChooser(shareIntent, "Share pegdroid"));		
 			}
     		
@@ -124,14 +132,16 @@ public class CheckersStallActivity extends Activity implements OnScoreSubmitObse
     	});
     	
     	mPlayAgainButton = (Button) findViewById(R.id.result_btn_playagain);
-    	mPlayAgainButton.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				CheckersGameActivity.launch(CheckersStallActivity.this, mBoardName);
-				finish();
-			}
-    		
-    	});
+    	if(mPlayAgainButton != null){	// because in small layouts I removed this button
+	    	mPlayAgainButton.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					CheckersGameActivity.launch(CheckersStallActivity.this, mBoardName);
+					finish();
+				}
+	    		
+	    	});
+    	}
     	
     	mSeeScoresButton = (Button) findViewById(R.id.result_btn_scores);
     	mSeeScoresButton.setOnClickListener(new OnClickListener(){
@@ -193,5 +203,35 @@ public class CheckersStallActivity extends Activity implements OnScoreSubmitObse
 		}
 	}
 	
+	private void showVoteMeDialog(){
+		Long c = PreferencesStore.getCount(this);
+		PreferencesStore.setCount(c + 1, this);
+		
+		if(c == 30 || c == 70 || c == 110){	
+			buildOkCancelDialog(getString(R.string.please_vote), getString(R.string.if_you_enjoyed),
+					new DialogInterface.OnClickListener(){
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							try{
+								Intent goToMarket =  new Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id=com.whiterabbit.checkers"));
+								startActivity(goToMarket);
+							}catch(ActivityNotFoundException e){
+								return;
+							}
+						}
+				
+			}, this);
+		 }
+	}
+	
+	void buildOkCancelDialog(String title, String message, DialogInterface.OnClickListener okListener, Context context){
+		AlertDialog.Builder ad = new AlertDialog.Builder(context);
+		ad.setTitle(title);
+		ad.setMessage(message);
+		ad.setPositiveButton(R.string.yes_please, okListener);
+		ad.setNegativeButton(R.string.no_thanks, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialogInterface, int i) {}});
+		ad.show();
+	}
 
 }

@@ -265,6 +265,19 @@ public abstract class BoardKind {
         if(name.equals(WieglebBoard.NAME)){
             return new WieglebBoard();
         }
+        /*if(name.equals(SimpleCross1.NAME)){
+            return new SimpleCross1();
+        }
+        if(name.equals(SimpleCross2.NAME)){
+            return new SimpleCross2();
+        }
+        if(name.equals(SimpleCross3.NAME)){
+            return new SimpleCross3();
+        }
+        if(name.equals(HoleMushroom.NAME)){
+            return new HoleMushroom();
+        }*/
+
         return null;
     }
     
@@ -279,6 +292,10 @@ public abstract class BoardKind {
         res.add(getBoardFromName(Board32Diamond.NAME));
         res.add(getBoardFromName(NineByNineBoard.NAME));
         res.add(getBoardFromName(WieglebBoard.NAME));
+/*        res.add(getBoardFromName(SimpleCross1.NAME));
+        res.add(getBoardFromName(SimpleCross2.NAME));
+        res.add(getBoardFromName(SimpleCross3.NAME));
+        res.add(getBoardFromName(HoleMushroom.NAME));*/
         //res.add(getBoardFromName(BoardS.NAME));
 
         return res;

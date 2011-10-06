@@ -3,7 +3,7 @@
 <!-- DO NOT EDIT - THIS FILE WAS GENERATED WITHIN AN EXPORT OF YOUR GAMES LIST OF AWARDS -->
 <!-- WITH EDITING THIS FILE YOU WILL MAKE IT UNPROCESSABLE (CHECKSUM ERRORS) -->
 <!--  -->
-<!-- File was generated on Mon Mar 21 23:24:20 +0000 2011 -->
+<!-- File was generated on Sun May 01 15:35:25 +0000 2011 -->
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
@@ -23,7 +23,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>SLAchievableListIdentifier</key>
-	<string>e439a16d-622a-4f39-b017-a0e67082b02c</string>
+	<string>e5805d37-546f-4bdc-bbc9-70ce3da65843</string>
 	<key>SLAwards</key>
 	<array>
 		<dict>
@@ -91,6 +91,66 @@
 			<string>{0, 1}</string>
 			<key>identifier</key>
 			<string>com.pegdroid.diamond</string>
+			<key>importance</key>
+			<integer>0</integer>
+			<key>rewardMoney</key>
+			<dict>
+				<key>amount</key>
+				<integer>0</integer>
+				<key>currency</key>
+				<string>XSR</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>counterRange</key>
+			<string>{0, 1}</string>
+			<key>identifier</key>
+			<string>com.pegdroid.smalldiamond</string>
+			<key>importance</key>
+			<integer>0</integer>
+			<key>rewardMoney</key>
+			<dict>
+				<key>amount</key>
+				<integer>0</integer>
+				<key>currency</key>
+				<string>XSR</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>counterRange</key>
+			<string>{0, 1}</string>
+			<key>identifier</key>
+			<string>com.pegdroid.ninebynine</string>
+			<key>importance</key>
+			<integer>0</integer>
+			<key>rewardMoney</key>
+			<dict>
+				<key>amount</key>
+				<integer>0</integer>
+				<key>currency</key>
+				<string>XSR</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>counterRange</key>
+			<string>{0, 1}</string>
+			<key>identifier</key>
+			<string>com.pegdroid.6x6</string>
+			<key>importance</key>
+			<integer>0</integer>
+			<key>rewardMoney</key>
+			<dict>
+				<key>amount</key>
+				<integer>0</integer>
+				<key>currency</key>
+				<string>XSR</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>counterRange</key>
+			<string>{0, 1}</string>
+			<key>identifier</key>
+			<string>com.pegdroid.wiglebs</string>
 			<key>importance</key>
 			<integer>0</integer>
 			<key>rewardMoney</key>

@@ -5,35 +5,48 @@
     android:layout_height="fill_parent"
     style="@style/ResultView">
 
-<View style="@style/ResultSeparator" />
 
+<LinearLayout 
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dip"
+    android:paddingRight="15dip"  
+ 	>
+<View style="@style/ResultSeparator" />
+<View style="@style/ResultSeparator" />
 <TextView
 	style="@style/ResultTitle"
 	android:id="@+id/result_title"/> 
+	
+<View style="@style/ResultSeparator" />
+<View style="@style/ResultSeparator" />
 
 <TextView
 	style="@style/ResultMessage"
 	android:id="@+id/result_message"/>  
- 				
+</LinearLayout>
+ 
+<View style="@style/ResultSeparator" />
+<View style="@style/ResultSeparator" />
 
 	    
 <TableLayout android:id="@+id/stall_view" 
              android:layout_width="fill_parent" 
              android:layout_height="fill_parent"
              android:stretchColumns="0,1"
-             style="@style/ResultButtons"
              xmlns:android="http://schemas.android.com/apk/res/android">
 	
 	<TableRow>
 		<Button android:id="@+id/result_btn_playagain"
 	        style="@style/ResultButton"
 	        android:text="@string/play_again"
-	        android:drawableTop="@drawable/diamond"/>
+	        android:drawableTop="@drawable/playagain"/>
 	        
 	    <Button android:id="@+id/result_btn_return_to_list"
 	        style="@style/ResultButton"
 	        android:text="@string/back"
-	        android:drawableTop="@drawable/diamond"/>
+	        android:drawableTop="@drawable/list"/>
 	</TableRow>
 	
 	<View style="@style/ResultSeparator" />
@@ -42,27 +55,33 @@
 		 	<Button android:id="@+id/result_btn_scores"
         style="@style/ResultButton"
         android:text="@string/check_leaderboard"
-        android:drawableTop="@drawable/diamond"
+        android:drawableTop="@drawable/scoreb"
     />
     <Button android:id="@+id/result_btn_share_with_a_friend"
         style="@style/ResultButton"
         android:text="@string/tell_a_friend"
-        android:drawableTop="@drawable/diamond"/>
+        android:drawableTop="@drawable/send"/>
     </TableRow>
     
     <View style="@style/ResultSeparator" />
         
     <TableRow>
     
+    
+    <Button android:id="@+id/result_btn_empty"
+    	android:drawableTop="@drawable/balls_score"
+        style="@style/ResultButtonEmpty" />
+
     <Button android:id="@+id/result_btn_share_social"
         style="@style/ResultButton"
         android:text="@string/share_to_social"
-        android:drawableTop="@drawable/diamond"
+        android:drawableTop="@drawable/share"
+        
     />
-    <Button android:id="@+id/result_btn_empty"
-        style="@style/ResultButtonEmpty" />    
+        
 	</TableRow>
 	
 	
 </TableLayout>
+
 </LinearLayout>

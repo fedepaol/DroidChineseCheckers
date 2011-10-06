@@ -43,7 +43,7 @@ public class SixBySixBoard extends BoardKind {
 
     @Override
     public int getImageResource() {
-        return R.drawable.frenchstyle;
+        return R.drawable.sixbysix;
     }
     
 	@Override

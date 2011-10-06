@@ -49,10 +49,9 @@ import org.anddev.andengine.util.Debug;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnClickListener;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -63,11 +62,7 @@ import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.scoreloop.client.android.core.model.Achievement;
-import com.scoreloop.client.android.core.model.Score;
-import com.scoreloop.client.android.ui.LeaderboardsScreenActivity;
 import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
-import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
 import com.whiterabbit.checkers.Constants;
 import com.whiterabbit.checkers.R;
 import com.whiterabbit.checkers.board.AndEngineBoard;
@@ -207,7 +202,9 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
 		
 		FontFactory.setAssetBasePath("font/");
 		this.mFontTexture = new Texture(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFont = FontFactory.createFromAsset(this.mFontTexture, this, "acme.ttf", 32, true, Color.WHITE);
+		//this.mFont = FontFactory.createFromAsset(this.mFontTexture, this, "acme.ttf", 32, true, Color.WHITE);
+		this.mFont = new Font(this.mFontTexture, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, true, Color.WHITE);
+		
 		
 		this.mEngine.getTextureManager().loadTexture(this.mFontTexture);
 		this.mEngine.getFontManager().loadFont(this.mFont);
@@ -233,11 +230,12 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
         
         mSecondsPlayed = mBoardType.getSavedTime();
         
-        scene.registerUpdateHandler(mTimerHandler);
         mScene = scene;
+        scene.registerUpdateHandler(mTimerHandler);
+        
         
         /* The ScoreText showing how many points the player scored. */
-		this.mScoreText = new ChangeableText(10, 10, this.mFont, "", "00:00".length());
+		this.mScoreText = new ChangeableText(15, 15, this.mFont, "", "00:00".length());
 		this.mScoreText.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		this.mScoreText.setAlpha(0.5f);
 		scene.getLayer(Constants.SCORE_LAYER).addEntity(this.mScoreText);
@@ -277,7 +275,8 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     }
     
     private void stopTimer(){
-    	mScene.unregisterUpdateHandler(mTimerHandler);
+    	if(mScene != null && mTimerHandler != null)
+    		mScene.unregisterUpdateHandler(mTimerHandler);
     }
 
     @Override

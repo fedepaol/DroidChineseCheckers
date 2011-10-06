@@ -48,7 +48,7 @@ public class WieglebBoard extends BoardKind {
 
     @Override
     public int getImageResource() {
-        return R.drawable.german;
+        return R.drawable.wieglebs;
     }
     
 	@Override

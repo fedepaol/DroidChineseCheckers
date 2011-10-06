@@ -48,7 +48,7 @@ public class NineByNineBoard extends BoardKind {
 
     @Override
     public int getImageResource() {
-        return R.drawable.german;
+        return R.drawable.ninebynine;
     }
     
 	@Override
@@ -70,7 +70,7 @@ public class NineByNineBoard extends BoardKind {
 
 	@Override
 	public String getAchievement() {
-		return "com.pegdroid.germany";
+		return "com.pegdroid.ninebynine";
 	}
 	
 	

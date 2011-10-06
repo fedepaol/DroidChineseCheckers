@@ -206,15 +206,15 @@ public class AndEngineBoard {
 				throw new CantMoveException();
 			}
 			middleY = startY + diff / 2;
-		}
-
-		if (startY == destY) {
+		}else if (startY == destY) {
 			middleY = startY;
 			int diff = destX - startX;
 			if (Math.abs(diff) != 2) {
 				throw new CantMoveException();
 			}
 			middleX = startX + diff / 2;
+		}else{
+			throw new CantMoveException();
 		}
 		BoardCell middleCell = mBoard[middleX][middleY];
 
@@ -358,7 +358,7 @@ public class AndEngineBoard {
 	 */
 	public void postMoveOperations() {
 		mScore++;
-		mGame.onGameStall(mScore);	// TODO Remove me
+		//mGame.onGameStall(mScore);	// TODO Remove me
 		for (int i = 0; i < mBoard.length; i++) {
 			for (int j = 0; j < mBoard[i].length; j++) {
 				if (canMove(i, j)) { // checks if at least one ball can be moved
