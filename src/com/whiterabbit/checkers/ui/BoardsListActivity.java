@@ -31,8 +31,10 @@ import android.widget.ListView;
 
 import com.google.ads.AdRequest;
 import com.google.ads.AdView;
+import com.immersion.uhl.Launcher;
 import com.whiterabbit.checkers.R;
 import com.whiterabbit.checkers.boards.BoardKind;
+import com.whiterabbit.checkers.util.Utils;
 
 
 
@@ -40,6 +42,7 @@ import com.whiterabbit.checkers.boards.BoardKind;
 public class BoardsListActivity extends ListActivity {
     ArrayList<BoardKind> mBoards;
     MyArrayAdapter mAdapter;
+    Launcher mHapticsLauncher;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class BoardsListActivity extends ListActivity {
         mBoards = BoardKind.getAllBoards();
         
         mAdapter = new MyArrayAdapter(this, R.layout.board_list_elem, mBoards);
-        
+        mHapticsLauncher = new Launcher(this);
         
         AdView adView = (AdView)this.findViewById(R.id.adView);
         AdRequest req = new AdRequest();
@@ -71,6 +74,7 @@ public class BoardsListActivity extends ListActivity {
             ad.setNeutralButton(button2String,
                     new OnClickListener() { 
                        public void onClick(DialogInterface dialog, int arg1) {
+                    	   Utils.playButtonPressed(mHapticsLauncher, BoardsListActivity.this);
                            CheckersGameActivity.launch(BoardsListActivity.this, board.getName(), true);
                        } });
         }else{
@@ -80,6 +84,7 @@ public class BoardsListActivity extends ListActivity {
         ad.setPositiveButton(button1String,
                              new OnClickListener() { 
                                 public void onClick(DialogInterface dialog, int arg1) {
+                                	Utils.playButtonPressed(mHapticsLauncher, BoardsListActivity.this);
                                     board.delete(BoardsListActivity.this);
                                     CheckersGameActivity.launch(BoardsListActivity.this, board.getName());
                                 } });    
@@ -89,6 +94,7 @@ public class BoardsListActivity extends ListActivity {
         ad.setNegativeButton(cancelString,
                 new OnClickListener() { 
                    public void onClick(DialogInterface dialog, int arg1) {
+                	   Utils.playButtonPressed(mHapticsLauncher, BoardsListActivity.this);
                        // do nothing
                    } });
         ad.show();
@@ -97,6 +103,7 @@ public class BoardsListActivity extends ListActivity {
     
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
+    	Utils.playButtonPressed(mHapticsLauncher, BoardsListActivity.this);
         BoardKind board = mBoards.get(position);       
         Boolean existsSaved = board.load(this);            
         showDialog(existsSaved, board);

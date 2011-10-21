@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.immersion.uhl.Launcher;
 import com.scoreloop.client.android.core.model.Achievement;
 import com.scoreloop.client.android.core.model.Score;
 import com.scoreloop.client.android.ui.LeaderboardsScreenActivity;
@@ -23,6 +24,7 @@ import com.scoreloop.client.android.ui.PostScoreOverlayActivity;
 import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
 import com.whiterabbit.checkers.PreferencesStore;
 import com.whiterabbit.checkers.R;
+import com.whiterabbit.checkers.util.Utils;
 
 
 
@@ -42,6 +44,7 @@ public class CheckersStallActivity extends Activity implements OnScoreSubmitObse
 	private Button mBackButton;
 	private Button mPlayAgainButton;
 	private Button mSeeScoresButton;
+	private Launcher mHapticsLauncher;
 	
 	
 	private Long mRemaining;
@@ -71,7 +74,7 @@ public class CheckersStallActivity extends Activity implements OnScoreSubmitObse
         }
         
         setContentView(R.layout.result_layout);
-        
+        mHapticsLauncher = new Launcher(this);
         setupButtons();
         
         if(mRemaining > 0)
@@ -96,6 +99,7 @@ public class CheckersStallActivity extends Activity implements OnScoreSubmitObse
 
 			@Override
 			public void onClick(View v) {
+				Utils.playButtonPressed(mHapticsLauncher, CheckersStallActivity.this);
 				tracker.trackPageView("/tellafriend");
 		        tracker.dispatch();
 				Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -113,6 +117,7 @@ public class CheckersStallActivity extends Activity implements OnScoreSubmitObse
 
 			@Override
 			public void onClick(View v) {
+				Utils.playButtonPressed(mHapticsLauncher, CheckersStallActivity.this);
 				tracker.trackPageView("/share");
 		        tracker.dispatch();
 				startActivityForResult(new Intent(CheckersStallActivity.this, PostScoreOverlayActivity.class), POST_SCORE);
@@ -126,6 +131,7 @@ public class CheckersStallActivity extends Activity implements OnScoreSubmitObse
     	mBackButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				Utils.playButtonPressed(mHapticsLauncher, CheckersStallActivity.this);
 				finish();
 			}
     		
@@ -136,6 +142,7 @@ public class CheckersStallActivity extends Activity implements OnScoreSubmitObse
 	    	mPlayAgainButton.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
+					Utils.playButtonPressed(mHapticsLauncher, CheckersStallActivity.this);
 					CheckersGameActivity.launch(CheckersStallActivity.this, mBoardName);
 					finish();
 				}
@@ -147,6 +154,7 @@ public class CheckersStallActivity extends Activity implements OnScoreSubmitObse
     	mSeeScoresButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				Utils.playButtonPressed(mHapticsLauncher, CheckersStallActivity.this);
 				final Intent intent = new Intent(CheckersStallActivity.this, LeaderboardsScreenActivity.class);
                 intent.putExtra(LeaderboardsScreenActivity.MODE, mMode); 
                 startActivity(intent);

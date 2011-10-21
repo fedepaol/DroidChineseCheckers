@@ -8,6 +8,7 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="src" path="/ScoreloopUI"/>
 	<classpathentry kind="lib" path="GoogleAdMobAdsSdk-4.1.0.jar"/>
+	<classpathentry kind="lib" path="/Users/fede/devel/sdks/UHL_v3.4.73/UHL.jar"/>
 	<classpathentry kind="src" path="ScoreloopUI_src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -16,10 +16,15 @@ import org.anddev.andengine.ui.activity.BaseGameActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.immersion.uhl.Launcher;
 import com.scoreloop.client.android.ui.EntryScreenActivity;
 import com.whiterabbit.checkers.Constants;
+import com.whiterabbit.checkers.R;
+import com.whiterabbit.checkers.util.Utils;
 
 
 
@@ -33,6 +38,7 @@ public class CheckersMainMenu extends BaseGameActivity {
 
 	protected static final int MENU_OK = 0;
 	protected static final int MENU_QUIT = MENU_OK + 1;
+	static final int MENU_OPTIONS = Menu.FIRST;
 
 	// ===========================================================
 	// Fields
@@ -47,6 +53,7 @@ public class CheckersMainMenu extends BaseGameActivity {
 	
 	protected TextureRegion mBackgroundTextureRegion;
 	protected Texture mBackgroundTexture;
+	private Launcher mHapticsLauncher;
 	
 	// ===========================================================
 	// Constructors
@@ -94,6 +101,7 @@ public class CheckersMainMenu extends BaseGameActivity {
 			@Override
 			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,
 					float pTouchAreaLocalX, float pTouchAreaLocalY) {
+				Utils.playButtonPressed(mHapticsLauncher, CheckersMainMenu.this);
 				Intent i = new Intent(CheckersMainMenu.this, BoardsListActivity.class);		        
 		        startActivity(i);
 				return true;
@@ -106,6 +114,7 @@ public class CheckersMainMenu extends BaseGameActivity {
 			@Override
 			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,
 					float pTouchAreaLocalX, float pTouchAreaLocalY) {
+				Utils.playButtonPressed(mHapticsLauncher, CheckersMainMenu.this);
 				Intent i = new Intent(CheckersMainMenu.this, EntryScreenActivity.class);	
 		        startActivity(i);
 				return true;
@@ -137,6 +146,7 @@ public class CheckersMainMenu extends BaseGameActivity {
         tracker.trackPageView("/main");
         tracker.dispatch();
         
+        mHapticsLauncher = new Launcher(this);
         super.onCreate(pSavedInstanceState);
     }
     
@@ -148,6 +158,35 @@ public class CheckersMainMenu extends BaseGameActivity {
       // Stop the tracker when it is no longer needed.
       tracker.stop();
     }
+    
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		
+		int groupId = 0;
+		int menuItemId = MENU_OPTIONS;
+		int menuItemOrder = Menu.NONE;	 
+		int menuItemText = R.string.options;
+		
+		menu.add(groupId, menuItemId, menuItemOrder, menuItemText).setIcon(android.R.drawable.ic_menu_preferences);
+		return true;
+	}
+    
+    
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
+		super.onOptionsItemSelected(item);
+		switch(item.getItemId()){
+			case MENU_OPTIONS:{
+				Intent i = new Intent(this, PegDroidPrefs.class); 
+				startActivity(i);
+				break;
+			}
+		}
+
+		return true;
+	}
     
 	
 

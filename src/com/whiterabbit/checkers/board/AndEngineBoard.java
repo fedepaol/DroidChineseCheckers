@@ -18,6 +18,7 @@ package com.whiterabbit.checkers.board;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
 
+import com.immersion.uhl.Launcher;
 import com.whiterabbit.checkers.Constants;
 import com.whiterabbit.checkers.board.BoardCell.CantFillException;
 import com.whiterabbit.checkers.boards.BoardKind;
@@ -358,7 +359,6 @@ public class AndEngineBoard {
 	 */
 	public void postMoveOperations() {
 		mScore++;
-		//mGame.onGameStall(mScore);	// TODO Remove me
 		for (int i = 0; i < mBoard.length; i++) {
 			for (int j = 0; j < mBoard[i].length; j++) {
 				if (canMove(i, j)) { // checks if at least one ball can be moved

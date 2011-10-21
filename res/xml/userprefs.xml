@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<PreferenceScreen
+xmlns:android="http://schemas.android.com/apk/res/android"> 
+	<PreferenceCategory
+		android:title="Preferences"/> <CheckBoxPreference
+		android:key="PREF_CHECK_BOX_VIBRATION"
+		android:title="Vibration on" 
+		android:summary="Enable vibration feedback" 
+		android:defaultValue="true"/>
+</PreferenceScreen>

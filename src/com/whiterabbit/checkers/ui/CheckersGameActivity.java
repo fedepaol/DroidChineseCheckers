@@ -52,7 +52,10 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
@@ -62,6 +65,7 @@ import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.immersion.uhl.Launcher;
 import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
 import com.whiterabbit.checkers.Constants;
 import com.whiterabbit.checkers.R;
@@ -71,6 +75,9 @@ import com.whiterabbit.checkers.boards.BoardClassicExtended;
 import com.whiterabbit.checkers.boards.BoardKind;
 import com.whiterabbit.checkers.boards.CheckersDbHelper;
 import com.whiterabbit.checkers.ui.BackArrowSprite.BackInterface;
+import com.whiterabbit.checkers.util.Utils;
+
+
 
 /**
  * Main activity class. It implements the real game
@@ -78,6 +85,24 @@ import com.whiterabbit.checkers.ui.BackArrowSprite.BackInterface;
  *
  */
 public class CheckersGameActivity extends BaseGameActivity implements BackInterface, OnScoreSubmitObserver{
+	
+	private class PlaySoundTask extends AsyncTask<Void, Void, Void> {
+	     protected void onProgressUpdate() {
+	         
+	     }
+
+	     protected void onPostExecute() {
+	         
+	     }
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Utils.vibrate(mHapticsLauncher, Launcher.IMPACT_METAL_66, CheckersGameActivity.this);
+			return null ;
+		}
+	 }
+	 
+	
 
 	GoogleAnalyticsTracker tracker;
 	
@@ -88,6 +113,10 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
 	public static final String REMAINING_BALLS = "Balls";
 	public static final String SECONDS = "Seconds";
 	public static final String ACHIEVEMENT = "Achievement";
+	
+	
+	static final int MENU_OPTIONS = Menu.FIRST;	
+
 	
 
     private Camera mCamera;
@@ -109,6 +138,7 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     private Texture mFontTexture;
 	private Font mFont;
 	private ChangeableText mScoreText;
+	private PlaySoundTask mSoundTask;
 
 
 
@@ -116,6 +146,8 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     private TiledTextureRegion mBackArrowRegion;
     private Texture mBackArrowTexture;
     private BackArrowSprite mBackArrow;
+    
+    private Launcher mHapticsLauncher;
 
     public static void launch(Activity launcher, String board, Boolean restore){
         Intent i = new Intent(launcher, CheckersGameActivity.class);
@@ -128,6 +160,35 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
         launch(launcher, board, false);
     }
     
+    
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		
+		int groupId = 0;
+		int menuItemId = MENU_OPTIONS;
+		int menuItemOrder = Menu.NONE;	 
+		int menuItemText = R.string.options;
+		
+		menu.add(groupId, menuItemId, menuItemOrder, menuItemText).setIcon(android.R.drawable.ic_menu_preferences);
+		return true;
+	}
+    
+    
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
+		super.onOptionsItemSelected(item);
+		switch(item.getItemId()){
+			case MENU_OPTIONS:{
+				Intent i = new Intent(this, PegDroidPrefs.class); 
+				startActivity(i);
+				break;
+			}
+		}
+
+		return true;
+	}
     
     @Override
     protected void onCreate(Bundle pSavedInstanceState) {
@@ -148,12 +209,17 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
         tracker.trackPageView(mBoardName);
         tracker.dispatch();
         mSecondsPlayed = 0;
+        mSoundTask = new PlaySoundTask();
         
         mTimerHandler = new TimerHandler(1.0f, true, new ITimerCallback() {
             public void onTimePassed(TimerHandler pTimerHandler) {
             	mSecondsPlayed++;
             	CheckersGameActivity.this.mScoreText.setText(getShortTimeFromSeconds(mSecondsPlayed));
         }});
+        
+        mHapticsLauncher = new Launcher(this);
+        
+        
 
         super.onCreate(pSavedInstanceState);
     }
@@ -300,7 +366,8 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
      */
     public void onGameStall(long thisGameScore){ 
     	stopTimer();
-        
+    	Utils.vibrate(mHapticsLauncher, Launcher.SLOW_PULSE_100, this);
+    	
         AlertDialog.Builder ad = new AlertDialog.Builder(this); 
 
         long oldScore = getOldScore();
@@ -371,6 +438,10 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     	long secs = seconds % 60;
     	return String.format("%02d:%02d", minutes, secs);
     	
+    }
+    
+    public Launcher getLauncher(){
+    	return mHapticsLauncher;
     }
     
     /**
@@ -471,7 +542,9 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     
     public void playMarbleSound()
     {
+    	Utils.vibrate(mHapticsLauncher, Launcher.IMPACT_METAL_66, this);
         mMarbleSound.play();
+        
     }
     
     
