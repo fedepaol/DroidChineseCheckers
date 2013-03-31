@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"	
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
 	
 	android:id="@+id/boardList"
@@ -30,7 +30,7 @@
                          ads:adUnitId="a14d2ccfb20d9cd"
                          ads:loadAdOnCreate="true"
                          ads:adSize="BANNER"/>                             
-<ListView android:id="@android:id/list" 
+<ListView android:id="@android:id/list"
 		android:layout_width="fill_parent" 
 		android:layout_height="fill_parent"
 		android:gravity="center_horizontal"
@@ -42,6 +42,5 @@
 
 
 </LinearLayout>
-
 
 

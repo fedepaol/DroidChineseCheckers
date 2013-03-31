@@ -53,10 +53,7 @@
     	</intent-filter>
     
         </activity>
-        
-        
 
-                  
     <activity android:name="com.google.ads.AdActivity" 
               android:configChanges="keyboard|keyboardHidden|orientation"/>
         
@@ -70,8 +67,7 @@
 
 
 
-
-    </application>
+   </application>
 
 
 </manifest> 
