@@ -15,12 +15,12 @@
  ******************************************************************************/
 package com.whiterabbit.checkers.board;
 
-import org.anddev.andengine.entity.scene.Scene;
-import org.anddev.andengine.entity.sprite.Sprite;
 
 import com.whiterabbit.checkers.Constants;
+import com.whiterabbit.checkers.exceptions.CantFillException;
 import com.whiterabbit.checkers.ui.CheckersSpriteFactory;
-
+import org.andengine.entity.scene.Scene;
+import org.andengine.entity.sprite.Sprite;
 
 
 public class FillableBoardCell extends BoardCell {
@@ -65,13 +65,13 @@ public class FillableBoardCell extends BoardCell {
     public void buildSprites(CheckersSpriteFactory f, Scene s, AndEngineBoard b, float size) {
         
         Sprite hole = f.getHoleSprite(x, y, b, size);
-        s.getLayer(Constants.HOLE_LAYER).addEntity(hole);
+        s.getChildByIndex(Constants.HOLE_LAYER).attachChild(hole);
         float scale = getScale(hole, size);
         //hole.setScale(scale);
         
         if(mFilled){
             mSprite = f.getBallSprite(x, y, b, size);
-            s.getLayer(Constants.BALL_LAYER).addEntity(mSprite);
+            s.getChildByIndex(Constants.BALL_LAYER).attachChild(mSprite);
             //mSprite.setScale(scale);
             s.registerTouchArea(mSprite);
         }

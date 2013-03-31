@@ -15,9 +15,8 @@
  ******************************************************************************/
 package com.whiterabbit.checkers.boards;
 
-import android.R;
 
-
+import com.whiterabbit.checkers.R;
 
 public class BoardS extends BoardKind {
     public final static String NAME = "S";
@@ -48,7 +47,7 @@ public class BoardS extends BoardKind {
 
     @Override
     public int getImageResource() {
-        return R.drawable.arrow_up_float;
+        return R.drawable.s_shape;
     }
     
 	@Override

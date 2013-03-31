@@ -15,12 +15,11 @@
  ******************************************************************************/
 package com.whiterabbit.checkers.board;
 
-import org.anddev.andengine.entity.scene.Scene;
-import org.anddev.andengine.entity.sprite.Sprite;
 
+import com.whiterabbit.checkers.exceptions.CantFillException;
 import com.whiterabbit.checkers.ui.CheckersSpriteFactory;
-
-
+import org.andengine.entity.scene.Scene;
+import org.andengine.entity.sprite.Sprite;
 
 
 public abstract class BoardCell{
@@ -31,11 +30,7 @@ public abstract class BoardCell{
         y = y_par;
     }
     
-    public class CantFillException extends Exception{
-        public CantFillException(String error){
-            super(error);
-        }
-    }
+
     
     public abstract void putBall() throws CantFillException;
     public abstract void getBall() throws CantFillException;

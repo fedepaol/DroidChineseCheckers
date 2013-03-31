@@ -48,7 +48,7 @@ public class HoleMushroom extends BoardKind {
 
     @Override
     public int getImageResource() {
-        return R.drawable.wieglebs;
+        return R.drawable.holemushroom;
     }
     
 	@Override

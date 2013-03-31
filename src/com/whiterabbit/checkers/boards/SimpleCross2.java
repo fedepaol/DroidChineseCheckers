@@ -46,7 +46,7 @@ private final char[][] map = {
 
     @Override
     public int getImageResource() {
-        return R.drawable.wieglebs;
+        return R.drawable.simple_cross_2;
     }
     
 	@Override

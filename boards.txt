@@ -1,0 +1,9 @@
+Board32Diamond		10
+BoardAsymmetrical	8
+BoardClassic		5
+BoardClassicEng			6
+BoardClassicExtended	7
+BoardStar				9
+SixBySixBoard			11
+wiglebs					12
+ninebynine				13

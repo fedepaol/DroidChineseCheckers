@@ -15,17 +15,14 @@
  ******************************************************************************/
 package com.whiterabbit.checkers.ui;
 
-import org.anddev.andengine.engine.Engine;
-import org.anddev.andengine.entity.sprite.Sprite;
-import org.anddev.andengine.opengl.texture.Texture;
-import org.anddev.andengine.opengl.texture.TextureOptions;
-import org.anddev.andengine.opengl.texture.region.TextureRegion;
-import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
-
 import android.content.Context;
-
 import com.whiterabbit.checkers.Constants;
 import com.whiterabbit.checkers.board.AndEngineBoard;
+import org.andengine.engine.Engine;
+import org.andengine.entity.sprite.Sprite;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
+import org.andengine.opengl.texture.region.TextureRegion;
 
 
 public class CheckersSpriteFactory {
@@ -34,16 +31,11 @@ public class CheckersSpriteFactory {
 
     
     public CheckersSpriteFactory(Engine e, Context ctx){
-        Texture texture = new Texture(Constants.BALL_SIZE, Constants.BALL_SIZE * 2, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        
-        
-        mHoleRegion = TextureRegionFactory.createFromAsset(texture, ctx, "gfx/hole.png", 0, 0);
-        mBallRegion = TextureRegionFactory.createFromAsset(texture, ctx, "gfx/ball.png", 0, Constants.BALL_SIZE);
-        
-        e.getTextureManager().loadTexture(texture);
-        
+        BitmapTextureAtlas texture =  new BitmapTextureAtlas(e.getTextureManager(), Constants.BALL_SIZE, Constants.BALL_SIZE * 2);
 
-        
+        mHoleRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(texture, ctx, "gfx/hole.png", 0, 0);
+        mBallRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(texture, ctx, "gfx/ball.png", 0, Constants.BALL_SIZE);
+        e.getTextureManager().loadTexture(texture);
     }
     
 

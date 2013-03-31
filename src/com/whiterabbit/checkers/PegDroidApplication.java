@@ -23,22 +23,16 @@ package com.whiterabbit.checkers;
 
 import android.app.Application;
 
-import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
-
 public class PegDroidApplication extends Application {
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		ScoreloopManagerSingleton.init(this);
-		ScoreloopManagerSingleton.get().loadAchievements(true, null);
 	}
 
-	@Override
-	public void onTerminate() {
-		super.onTerminate();
-		ScoreloopManagerSingleton.destroy();
-	}
-
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+    }
 
 }

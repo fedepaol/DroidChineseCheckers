@@ -15,29 +15,32 @@
  ******************************************************************************/
 package com.whiterabbit.checkers.ui;
 
-import org.anddev.andengine.entity.sprite.Sprite;
-import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
+import android.util.Log;
 import com.whiterabbit.checkers.board.AndEngineBoard;
+import org.andengine.entity.sprite.Sprite;
+import org.andengine.opengl.texture.region.TextureRegion;
 
 
 public class BoardSprite extends Sprite {
     AndEngineBoard board;
     public BoardSprite(int boardX, int boardY, TextureRegion pTextureRegion, AndEngineBoard b, float width, float height) {
-        
-        super(getCenteredX(b.getXCoordFromBoardY(boardY), width), 
+
+        super(getCenteredX(b.getXCoordFromBoardY(boardY), width),
               getCenteredY(b.getYCoordFromBoardX(boardX), height), 
               width, height,
-              pTextureRegion);
+              pTextureRegion,
+                b.getGame().getVertexBufferObjectManager());
         board = b;
     }
     
     
     public void setPosition(int boardX, int boardY){
-        float yLocation = getCenteredY(board.getYCoordFromBoardX(boardX), this.getBaseHeight());
-        float xLocation = getCenteredX(board.getXCoordFromBoardY(boardY), this.getBaseWidth());
-        
-        
+        Log.d("CELL", "Setting board x = " + boardX + " boardY = "  + boardY);
+        float yLocation = getCenteredY(board.getYCoordFromBoardX(boardX), this.getHeight());
+        float xLocation = getCenteredX(board.getXCoordFromBoardY(boardY), this.getWidth());
+
+        Log.d("CELL", "Real x = " + xLocation + " realY = "  + yLocation);
         this.setPosition(xLocation, yLocation);
     }
 

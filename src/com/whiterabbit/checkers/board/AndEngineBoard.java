@@ -15,16 +15,14 @@
  ******************************************************************************/
 package com.whiterabbit.checkers.board;
 
-import org.anddev.andengine.entity.scene.Scene;
-import org.anddev.andengine.entity.sprite.Sprite;
-
-import com.immersion.uhl.Launcher;
 import com.whiterabbit.checkers.Constants;
-import com.whiterabbit.checkers.board.BoardCell.CantFillException;
 import com.whiterabbit.checkers.boards.BoardKind;
+import com.whiterabbit.checkers.exceptions.CantFillException;
 import com.whiterabbit.checkers.ui.BallSprite;
 import com.whiterabbit.checkers.ui.CheckersGameActivity;
 import com.whiterabbit.checkers.ui.CheckersSpriteFactory;
+import org.andengine.entity.scene.Scene;
+import org.andengine.entity.sprite.Sprite;
 
 /**
  * Checkers board
@@ -239,7 +237,7 @@ public class AndEngineBoard {
 			@Override
 			public void run() {
 				mScene.unregisterTouchArea(toDel);
-				mScene.getLayer(Constants.BALL_LAYER).removeEntity(toDel);
+				mScene.getChildByIndex(Constants.BALL_LAYER).detachChild(toDel);
 			}
 		});
 
@@ -412,12 +410,12 @@ public class AndEngineBoard {
 		destBall.setPosition(lastStart.x, lastStart.y);
 		lastDest.eraseBallSprite();
 		mGame.runOnUpdateThread(new Runnable() {
-			@Override
-			public void run() {
-				lastDeleted.buildSprites(mSpriteFactory, mScene,
-						AndEngineBoard.this, AndEngineBoard.this.mBallSize);
-			}
-		});
+            @Override
+            public void run() {
+                lastDeleted.buildSprites(mSpriteFactory, mScene,
+                        AndEngineBoard.this, AndEngineBoard.this.mBallSize);
+            }
+        });
 		mScore--;
 	}
 

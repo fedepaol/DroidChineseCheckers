@@ -52,36 +52,16 @@
 	<View style="@style/ResultSeparator" />
 	
 	<TableRow>
-		 	<Button android:id="@+id/result_btn_scores"
-        style="@style/ResultButton"
-        android:text="@string/check_leaderboard"
-        android:drawableTop="@drawable/scoreb"
-    />
     <Button android:id="@+id/result_btn_share_with_a_friend"
         style="@style/ResultButton"
         android:text="@string/tell_a_friend"
-        android:drawableTop="@drawable/send"/>
+        android:drawableTop="@drawable/share"/>
+        <Button android:id="@+id/result_btn_empty"
+                android:drawableTop="@drawable/balls_score"
+                style="@style/ResultButtonEmpty" />
+
     </TableRow>
     
-    <View style="@style/ResultSeparator" />
-        
-    <TableRow>
-    
-    
-    <Button android:id="@+id/result_btn_empty"
-    	android:drawableTop="@drawable/balls_score"
-        style="@style/ResultButtonEmpty" />
-
-    <Button android:id="@+id/result_btn_share_social"
-        style="@style/ResultButton"
-        android:text="@string/share_to_social"
-        android:drawableTop="@drawable/share"
-        
-    />
-        
-	</TableRow>
-	
-	
 </TableLayout>
 
 </LinearLayout>

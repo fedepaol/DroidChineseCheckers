@@ -15,20 +15,21 @@
  ******************************************************************************/
 package com.whiterabbit.checkers;
 
-import org.anddev.andengine.ui.activity.BaseGameActivity;
-
 import android.util.DisplayMetrics;
- 
+import org.andengine.ui.activity.BaseGameActivity;
+
 
 public class Constants {
  
     public static final int BALL_SIZE = 64;
     public static final int BALL_DISTANCE = BALL_SIZE + BALL_SIZE / 10;
-    
-    public static final int HOLE_LAYER = 0;
-    public static final int BALL_LAYER = 1;
-    public static final int SCORE_LAYER = 2;
-    
+
+    public static final int BACKGROUND_LAYER = 0;
+    public static final int HOLE_LAYER = 1;
+    public static final int BALL_LAYER = 2;
+    public static final int SCORE_LAYER = 3;
+    public static final int LAYER_COUNT = 4;
+
     public static final int CAMERA_WIDTH = 480;
     public static final int ADMOB_HEIGHT = 40;
     

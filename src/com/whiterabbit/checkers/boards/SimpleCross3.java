@@ -47,7 +47,7 @@ public class SimpleCross3 extends BoardKind {
 
     @Override
     public int getImageResource() {
-        return R.drawable.wieglebs;
+        return R.drawable.simple_cross_3;
     }
     
 	@Override

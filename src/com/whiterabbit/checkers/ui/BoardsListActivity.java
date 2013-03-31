@@ -15,9 +15,6 @@
  ******************************************************************************/
 package com.whiterabbit.checkers.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -28,13 +25,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import com.google.ads.AdRequest;
-import com.google.ads.AdView;
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.Tracker;
 import com.immersion.uhl.Launcher;
 import com.whiterabbit.checkers.R;
 import com.whiterabbit.checkers.boards.BoardKind;
 import com.whiterabbit.checkers.util.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -43,7 +42,11 @@ public class BoardsListActivity extends ListActivity {
     ArrayList<BoardKind> mBoards;
     MyArrayAdapter mAdapter;
     Launcher mHapticsLauncher;
-    
+
+    private Tracker mGaTracker;
+    private GoogleAnalytics mGaInstance;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,13 +55,13 @@ public class BoardsListActivity extends ListActivity {
         
         mAdapter = new MyArrayAdapter(this, R.layout.board_list_elem, mBoards);
         mHapticsLauncher = new Launcher(this);
-        
-        AdView adView = (AdView)this.findViewById(R.id.adView);
-        AdRequest req = new AdRequest();
-        adView.loadAd(req);    
-        
+
+        mGaInstance = GoogleAnalytics.getInstance(this);
+        mGaTracker = mGaInstance.getTracker(getString(R.string.ga_trackingId));
         this.setListAdapter(mAdapter);
     }
+    
+
     
     
     void showDialog(Boolean existsSaved, final BoardKind board)
@@ -107,10 +110,8 @@ public class BoardsListActivity extends ListActivity {
         BoardKind board = mBoards.get(position);       
         Boolean existsSaved = board.load(this);            
         showDialog(existsSaved, board);
+        mGaTracker.sendEvent("Board", "board_play", board.getName(), Long.valueOf(0));
 
-        
-        /*String message = String.format("%s\n%s\n%s", dateString, timeString, fullStatus);
-        showDialog(message, shortStatus);*/
     }
 
  
@@ -139,6 +140,13 @@ public class BoardsListActivity extends ListActivity {
                
     }
 
+    @Override
+    protected void onDestroy() {    
+      super.onDestroy();
+      // Stop the tracker when it is no longer needed.
+      
+    }
+    
 
     @Override
     protected void onResume() {

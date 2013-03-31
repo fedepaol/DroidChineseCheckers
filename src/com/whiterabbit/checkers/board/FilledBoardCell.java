@@ -15,12 +15,12 @@
  ******************************************************************************/
 package com.whiterabbit.checkers.board;
 
-import org.anddev.andengine.entity.scene.Scene;
-import org.anddev.andengine.entity.sprite.Sprite;
 
+import com.whiterabbit.checkers.exceptions.CantFillException;
 import com.whiterabbit.checkers.ui.BallSprite;
 import com.whiterabbit.checkers.ui.CheckersSpriteFactory;
-
+import org.andengine.entity.scene.Scene;
+import org.andengine.entity.sprite.Sprite;
 
 
 public class FilledBoardCell extends BoardCell{
@@ -31,7 +31,7 @@ public class FilledBoardCell extends BoardCell{
 
     @Override
     public void putBall() throws CantFillException{
-        throw new CantFillException("Filled cell"); 
+        throw new CantFillException("Filled cell");
     }
 
     @Override

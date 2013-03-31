@@ -16,67 +16,54 @@
 package com.whiterabbit.checkers.ui;
 
 
-
-
-import java.io.IOException;
-
-import javax.microedition.khronos.opengles.GL10;
-
-import org.anddev.andengine.audio.sound.Sound;
-import org.anddev.andengine.audio.sound.SoundFactory;
-import org.anddev.andengine.engine.Engine;
-import org.anddev.andengine.engine.camera.Camera;
-import org.anddev.andengine.engine.handler.timer.ITimerCallback;
-import org.anddev.andengine.engine.handler.timer.TimerHandler;
-import org.anddev.andengine.engine.options.EngineOptions;
-import org.anddev.andengine.engine.options.EngineOptions.ScreenOrientation;
-import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
-import org.anddev.andengine.entity.scene.Scene;
-import org.anddev.andengine.entity.scene.background.SpriteBackground;
-import org.anddev.andengine.entity.sprite.Sprite;
-import org.anddev.andengine.entity.text.ChangeableText;
-import org.anddev.andengine.entity.util.FPSLogger;
-import org.anddev.andengine.opengl.font.Font;
-import org.anddev.andengine.opengl.font.FontFactory;
-import org.anddev.andengine.opengl.texture.Texture;
-import org.anddev.andengine.opengl.texture.TextureOptions;
-import org.anddev.andengine.opengl.texture.region.TextureRegion;
-import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
-import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
-import org.anddev.andengine.opengl.view.RenderSurfaceView;
-import org.anddev.andengine.ui.activity.BaseGameActivity;
-import org.anddev.andengine.util.Debug;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
-
+import com.bugsense.trace.BugSenseHandler;
 import com.google.ads.AdRequest;
-import com.google.ads.AdSize;
 import com.google.ads.AdView;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.immersion.uhl.Launcher;
-import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
 import com.whiterabbit.checkers.Constants;
 import com.whiterabbit.checkers.R;
 import com.whiterabbit.checkers.board.AndEngineBoard;
-import com.whiterabbit.checkers.board.BoardCell.CantFillException;
 import com.whiterabbit.checkers.boards.BoardClassicExtended;
 import com.whiterabbit.checkers.boards.BoardKind;
 import com.whiterabbit.checkers.boards.CheckersDbHelper;
+import com.whiterabbit.checkers.exceptions.CantFillException;
 import com.whiterabbit.checkers.ui.BackArrowSprite.BackInterface;
 import com.whiterabbit.checkers.util.Utils;
+import org.andengine.audio.sound.Sound;
+import org.andengine.audio.sound.SoundFactory;
+import org.andengine.engine.camera.Camera;
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
+import org.andengine.engine.options.EngineOptions;
+import org.andengine.engine.options.ScreenOrientation;
+import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
+import org.andengine.entity.Entity;
+import org.andengine.entity.scene.Scene;
+import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.text.Text;
+import org.andengine.entity.util.FPSLogger;
+import org.andengine.opengl.font.Font;
+import org.andengine.opengl.font.FontFactory;
+import org.andengine.opengl.texture.ITexture;
+import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
+import org.andengine.opengl.texture.region.TextureRegion;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
+import org.andengine.ui.activity.LayoutGameActivity;
+import org.andengine.util.debug.Debug;
 
+import javax.microedition.khronos.opengles.GL10;
+import java.io.IOException;
 
 
 /**
@@ -84,8 +71,8 @@ import com.whiterabbit.checkers.util.Utils;
  * @author fede
  *
  */
-public class CheckersGameActivity extends BaseGameActivity implements BackInterface, OnScoreSubmitObserver{
-	
+public class CheckersGameActivity extends LayoutGameActivity implements BackInterface{
+
 	private class PlaySoundTask extends AsyncTask<Void, Void, Void> {
 	     protected void onProgressUpdate() {
 	         
@@ -104,8 +91,6 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
 	 
 	
 
-	GoogleAnalyticsTracker tracker;
-	
 	public static final String TITLE = "Title";
 	public static final String MESSAGE = "Message";
 	public static final String BOARD = "Board";
@@ -117,7 +102,7 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
 	
 	static final int MENU_OPTIONS = Menu.FIRST;	
 
-	
+
 
     private Camera mCamera;
     CheckersSpriteFactory mSpriteFactory;
@@ -135,16 +120,16 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     private Scene mScene;
     private Sound mMarbleSound;
     
-    private Texture mFontTexture;
+    private ITexture mFontTexture;
 	private Font mFont;
-	private ChangeableText mScoreText;
+	private Text mScoreText;
 	private PlaySoundTask mSoundTask;
 
 
 
     private TextureRegion mBackgroundRegion;
     private TiledTextureRegion mBackArrowRegion;
-    private Texture mBackArrowTexture;
+    private BitmapTextureAtlas mBackArrowTexture;
     private BackArrowSprite mBackArrow;
     
     private Launcher mHapticsLauncher;
@@ -203,11 +188,7 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
         mBoardType = BoardKind.getBoardFromName(boardName);
         mBoardName = boardName;
         db = new CheckersDbHelper(this);
-        tracker = GoogleAnalyticsTracker.getInstance();
 
-        tracker.start("UA-16514009-3", this);
-        tracker.trackPageView(mBoardName);
-        tracker.dispatch();
         mSecondsPlayed = 0;
         mSoundTask = new PlaySoundTask();
         
@@ -218,102 +199,127 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
         }});
         
         mHapticsLauncher = new Launcher(this);
-        
-        
+
+        BugSenseHandler.initAndStartSession(this, getString(R.string.bugsensekey));
 
         super.onCreate(pSavedInstanceState);
     }
-    
-    
+
+    @Override
+    protected void onStart() {
+        super.onStart();    // Autogenerated
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();    // Autogenerated
+        EasyTracker.getInstance().activityStop(this); // Add this method.
+
+    }
 
     @Override
     protected void onDestroy() {
       super.onDestroy();
       // Stop the tracker when it is no longer needed.
-      tracker.stop();
     }
     
     @Override
-    public Engine onLoadEngine() {
-        
+    public EngineOptions onCreateEngineOptions() {
+
         mCameraHeight = Constants.getHeight(mCameraWidth, this);
         mAdMobOffset = Constants.getOffset(mCameraWidth, this);
         this.mCamera = new Camera(0, 0, mCameraWidth, mCameraHeight);
-        return new Engine(new EngineOptions(true, ScreenOrientation.PORTRAIT, 
-                new RatioResolutionPolicy(mCameraWidth, mCameraHeight), this.mCamera).setNeedsSound(true));
+
+        EngineOptions res = new EngineOptions(true, ScreenOrientation.PORTRAIT_FIXED,
+                new RatioResolutionPolicy(mCameraWidth, mCameraHeight), this.mCamera); // TODO .setNeedsSound(true);
+        res.getAudioOptions().setNeedsSound(true);
+        res.getRenderOptions().setDithering(true);
+        return res;
+    }
+
+
+
+    @Override
+    public void onPopulateScene(Scene pScene, OnPopulateSceneCallback pOnPopulateSceneCallback) throws Exception {
+        pOnPopulateSceneCallback.onPopulateSceneFinished();
     }
 
     @Override
-    public void onLoadResources() {
-        
-        mSpriteFactory = new CheckersSpriteFactory(mEngine, this); 
-        Texture texture = new Texture(512 , 1024, TextureOptions.DEFAULT);  
+    public void onCreateResources(OnCreateResourcesCallback pOnCreateResourcesCallback) throws Exception {
 
-        mBackgroundRegion  = TextureRegionFactory.createFromAsset(texture, this, "gfx/back.png", 0, 0);
+        mSpriteFactory = new CheckersSpriteFactory(mEngine, this);
+        BitmapTextureAtlas texture =  new BitmapTextureAtlas(getTextureManager(), 512, 1024);
+
+        mBackgroundRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(texture, this, "gfx/back.png", 0, 0);
         mEngine.getTextureManager().loadTexture(texture);
         
         SoundFactory.setAssetBasePath("mfx/");
         try {
-            this.mMarbleSound = SoundFactory.createSoundFromAsset(this.mEngine.getSoundManager(), this, "marble.ogg");
+            this.mMarbleSound = SoundFactory.createSoundFromAsset(getSoundManager(), this, "marble.ogg");
         } catch (final IOException e) {
             Debug.e("Error", e);
         }
         
         
         
-        this.mBackArrowTexture = new Texture(128, 64, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        this.mBackArrowRegion = TextureRegionFactory.createTiledFromAsset(this.mBackArrowTexture, this, "gfx/back_arrow.png", 0, 0,2,1);
+        this.mBackArrowTexture = new BitmapTextureAtlas(getTextureManager(), 128, 64, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        this.mBackArrowRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(this.mBackArrowTexture, this, "gfx/back_arrow.png", 0, 0,2,1);
         this.mBackArrowRegion.setCurrentTileIndex(BackArrowSprite.DISABLED_TILE);
 		this.mEngine.getTextureManager().loadTexture(this.mBackArrowTexture);
 		
 		FontFactory.setAssetBasePath("font/");
-		this.mFontTexture = new Texture(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		//this.mFont = FontFactory.createFromAsset(this.mFontTexture, this, "acme.ttf", 32, true, Color.WHITE);
-		this.mFont = new Font(this.mFontTexture, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, true, Color.WHITE);
-		
-		
+        mFontTexture = new BitmapTextureAtlas(this.getTextureManager(), 512, 512, TextureOptions.BILINEAR);
+
+        this.mFont = FontFactory.create(this.getFontManager(), this.getTextureManager(), 512, 512, TextureOptions.BILINEAR, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36);
+        this.mFont.load();
+
 		this.mEngine.getTextureManager().loadTexture(this.mFontTexture);
 		this.mEngine.getFontManager().loadFont(this.mFont);
+        pOnCreateResourcesCallback.onCreateResourcesFinished();
 
     }
 
+
+
     @Override
-    public Scene onLoadScene() {
+    public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback) throws Exception {
         this.mEngine.registerUpdateHandler(new FPSLogger());
 
-        final Scene scene = new Scene(3);
-        
-        Sprite back = new Sprite(0, 0, mBackgroundRegion);
-        scene.setBackground(new SpriteBackground(back));
-        
-        mBoard = new AndEngineBoard(mCameraWidth, mCameraHeight, mBoardType, mLoadSaved, scene, mSpriteFactory, mAdMobOffset, this); 
+        this.mScene = new Scene();
+        for(int i = 0; i < Constants.LAYER_COUNT; i++) {
+            this.mScene.attachChild(new Entity());
+        }
+
+
+        //this.mScene.setBackgroundEnabled(false);
+        Sprite back = new Sprite(0, 0, mBackgroundRegion, getVertexBufferObjectManager());
+        this.mScene.getChildByIndex(Constants.BACKGROUND_LAYER).attachChild(back);
+
+
+        mBoard = new AndEngineBoard(mCameraWidth, mCameraHeight, mBoardType, mLoadSaved, mScene, mSpriteFactory, mAdMobOffset, this);
         
         this.mBackArrow = new BackArrowSprite(mCameraWidth - 64 - 10, 10, 64, 64, mBackArrowRegion, mBackArrowTexture, this, this);
-        scene.getLayer(Constants.SCORE_LAYER).addEntity(mBackArrow);
-        scene.registerTouchArea(mBackArrow);
+        mScene.getChildByIndex(Constants.SCORE_LAYER).attachChild(mBackArrow);
+        mScene.registerTouchArea(mBackArrow);
                 
-        scene.setTouchAreaBindingEnabled(true);
-        
+        mScene.setTouchAreaBindingOnActionDownEnabled(true);
+        mScene.setTouchAreaBindingOnActionMoveEnabled(true);
+
         mSecondsPlayed = mBoardType.getSavedTime();
         
-        mScene = scene;
-        scene.registerUpdateHandler(mTimerHandler);
+        mScene.registerUpdateHandler(mTimerHandler);
         
         
         /* The ScoreText showing how many points the player scored. */
-		this.mScoreText = new ChangeableText(15, 15, this.mFont, "", "00:00".length());
+        mScoreText = new Text(15, 15, this.mFont, "", "00:00".length(), this.getVertexBufferObjectManager());
+
 		this.mScoreText.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		this.mScoreText.setAlpha(0.5f);
-		scene.getLayer(Constants.SCORE_LAYER).addEntity(this.mScoreText);
+		mScene.getChildByIndex(Constants.SCORE_LAYER).attachChild(this.mScoreText);
         
-        return scene;
+        pOnCreateSceneCallback.onCreateSceneFinished(mScene);
     }
-
-    @Override
-    public void onLoadComplete() {
-
-    }
-    
 
 
     @Override
@@ -337,6 +343,8 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
         if(!mLoadSaved){
         	mSecondsPlayed = 0;
         }
+        AdView adView = (AdView)this.findViewById(R.id.adView);
+        adView.loadAd(new AdRequest());
         super.onResume();
     }
     
@@ -484,62 +492,16 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
     protected boolean testMode=true;
 
     @Override
-    protected void onSetContentView() {
-        
-        
-        final RelativeLayout relativeLayout = new RelativeLayout(this);
-        final FrameLayout.LayoutParams relativeLayoutLayoutParams = 
-                            new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-
-        final AdView adView = new AdView(this, AdSize.BANNER, "a14d2ccfb20d9cd");
-
-        adView.refreshDrawableState();
-        adView.setVisibility(View.VISIBLE);
-        AdRequest req = new AdRequest();
-
-        adView.loadAd(req);
-
-        
-
-        this.mRenderSurfaceView = new RenderSurfaceView(this);
-        mRenderSurfaceView.setRenderer(mEngine);
-
-        final android.widget.RelativeLayout.LayoutParams surfaceViewLayoutParams = 
-                               new RelativeLayout.LayoutParams(super.createSurfaceViewLayoutParams());
-        surfaceViewLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-
-        final android.widget.RelativeLayout.LayoutParams adViewLayoutParams=
-                           new RelativeLayout.LayoutParams(super.createSurfaceViewLayoutParams());
-        
-        adViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        
-        adViewLayoutParams.height=LayoutParams.WRAP_CONTENT;
-        adViewLayoutParams.width=LayoutParams.FILL_PARENT;
-        
-        relativeLayout.addView(this.mRenderSurfaceView, surfaceViewLayoutParams);
-        relativeLayout.addView(adView, adViewLayoutParams);
-
-        
-        this.setContentView(relativeLayout, relativeLayoutLayoutParams);    
+    protected int getLayoutID() {
+        return R.layout.game_layout;
     }
 
-    protected boolean isShowInCenter() {
-        return showInCenter;
+    @Override
+    protected int getRenderSurfaceViewID() {
+        return R.id.game_rendersurfaceview;
     }
 
-    protected void setShowInCenter(boolean showInCenter) {
-        this.showInCenter = showInCenter;
-    }
 
-    protected boolean isTestMode() {
-        return testMode;
-    }
-
-    protected void setTestMode(boolean testMode) {
-        this.testMode = testMode;
-    }
-
-    
     public void playMarbleSound()
     {
     	Utils.vibrate(mHapticsLauncher, Launcher.IMPACT_METAL_66, this);
@@ -560,16 +522,6 @@ public class CheckersGameActivity extends BaseGameActivity implements BackInterf
 			
 		}
     }
-
-	@Override
-	public void onScoreSubmit(int status, Exception error) {
-		// TODO Auto-generated method stub
-		
-	}
-
-    
-
-    
 
 
     

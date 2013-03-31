@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+             android:layout_height="match_parent">
+
+    <org.andengine.opengl.view.RenderSurfaceView android:id="@+id/game_rendersurfaceview"
+                                                        android:layout_width="fill_parent"
+                                                        android:layout_height="fill_parent"
+                                                        android:layout_gravity="center" />
+
+    <com.google.ads.AdView android:id="@+id/adView"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           ads:adUnitId="@string/admobkey"
+                           ads:adSize="BANNER"
+                           ads:testDevices=""
+                          android:layout_gravity="bottom"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        ads:loadAdOnCreate="true"/>
+
+</FrameLayout>

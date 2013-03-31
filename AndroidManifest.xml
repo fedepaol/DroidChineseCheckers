@@ -16,12 +16,13 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.whiterabbit.checkers"
-      android:versionCode="24"
-      android:versionName="2.24" 
+      android:versionCode="32"
+      android:versionName="3.00"
       android:installLocation="auto">
       
-      	<uses-sdk android:minSdkVersion="4" />
-      	
+      	<uses-sdk android:minSdkVersion="5" />
+    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
+
     <uses-permission android:name="android.permission.VIBRATE"/>  	
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -29,7 +30,7 @@
 	<uses-permission android:name="android.permission.WAKE_LOCK"/>
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <application 		android:name="PegDroidApplication"  
+    <application 		android:name="PegDroidApplication"
     android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true" android:theme="@android:style/Theme.NoTitleBar">
         <activity android:name=".ui.CheckersGameActivity"
                   android:configChanges="orientation">
@@ -54,51 +55,22 @@
         </activity>
         
         
-        
-	<!-- Defining the ScoreloopUI activities -->
-	<activity android:name="com.scoreloop.client.android.ui.PostScoreOverlayActivity" android:theme="@style/sl_dialog"/>
-	<activity android:name="com.scoreloop.client.android.ui.EntryScreenActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
-	<activity android:name="com.scoreloop.client.android.ui.ShowResultOverlayActivity" android:theme="@style/sl_dialog"/>
-	<activity android:name="com.scoreloop.client.android.ui.LeaderboardsScreenActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
-	<activity android:name="com.scoreloop.client.android.ui.component.market.MarketHeaderActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.market.MarketListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.entry.EntryListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.post.PostOverlayActivity" android:theme="@style/sl_dialog"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.score.ScoreHeaderActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.score.ScoreListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.user.UserAddBuddyListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.user.UserHeaderActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.user.UserDetailListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.user.UserListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.game.GameDetailHeaderActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.game.GameDetailListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.game.GameListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.achievement.AchievementHeaderActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.achievement.AchievementListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.news.NewsHeaderActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.news.NewsListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.challenge.ChallengeHeaderActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.challenge.ChallengeListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.challenge.ChallengeAcceptListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.challenge.ChallengeCreateListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.challenge.ChallengePaymentActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.profile.ProfileSettingsListActivity"/>
-	 <activity android:name="com.scoreloop.client.android.ui.component.profile.ProfileSettingsPictureListActivity"/>
-	 
-	 <activity android:name="com.scoreloop.client.android.ui.framework.ScreenActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
-	 <activity android:name="com.scoreloop.client.android.ui.framework.TabsActivity"/>
+
                   
+    <activity android:name="com.google.ads.AdActivity" 
+              android:configChanges="keyboard|keyboardHidden|orientation"/>
         
 	<!-- The application's publisher ID assigned by AdMob -->
 	<meta-data android:value="a14d2ccfb20d9cd" android:name="ADMOB_PUBLISHER_ID" />
 	
 	<!-- Track Market installs -->
 	<activity android:name="com.google.ads.AdActivity"
-              android:configChanges="keyboard|keyboardHidden|orientation"/>
+              android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 	
-	<receiver android:name="com.google.ads.InstallReceiver" android:exported="true">
-	<intent-filter> <action android:name="com.android.vending.INSTALL_REFERRER" />
-	</intent-filter> </receiver>
+
+
+
+
     </application>
 
 

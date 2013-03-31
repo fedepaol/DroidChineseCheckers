@@ -15,23 +15,38 @@
  ******************************************************************************/
 package com.whiterabbit.checkers.ui;
 
-import org.anddev.andengine.input.touch.TouchEvent;
-import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import com.whiterabbit.checkers.board.AndEngineBoard;
 import com.whiterabbit.checkers.board.AndEngineBoard.CantMoveException;
-import com.whiterabbit.checkers.board.BoardCell.CantFillException;
+import com.whiterabbit.checkers.exceptions.CantFillException;
+import org.andengine.engine.camera.Camera;
+import org.andengine.input.touch.TouchEvent;
+import org.andengine.opengl.texture.region.TextureRegion;
+import org.andengine.opengl.util.GLState;
 
 
 public class BallSprite extends BoardSprite {
+    private enum BallState {
+        STOPPED,
+        MOVING
+    }
+
     private int baseBoardX, baseBoardY;
+    private BallState mState;
     
     public BallSprite(int pX, int pY, TextureRegion pTextureRegion, AndEngineBoard b, float width, float height) {
         super(pX, pY, pTextureRegion, b, width, height);
         baseBoardX = 0;
         baseBoardY = 0;
+        mState = BallState.STOPPED;
     }
-    
+
+    @Override
+    protected void preDraw(final GLState pGLState, final Camera pCamera)
+    {
+        super.preDraw(pGLState, pCamera);
+        pGLState.enableDither();
+    }
     
     /** 
      * When the user releases the ball
@@ -44,7 +59,7 @@ public class BallSprite extends BoardSprite {
         // if something happens I restore the ball in its original place
         try {
             board.moveBall(baseBoardX, baseBoardY, releaseBoardX, releaseBoardY);
-            
+
             setPosition(releaseBoardX, releaseBoardY);
         } catch (CantMoveException e) {
             setPosition(baseBoardX, baseBoardY);
@@ -62,17 +77,26 @@ public class BallSprite extends BoardSprite {
     public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX,
             float pTouchAreaLocalY) {
         
-        int action = pSceneTouchEvent.getAction(); 
+        int action = pSceneTouchEvent.getAction();
         
         switch(action){
         case TouchEvent.ACTION_UP:
-            handleReleaseSprite(pSceneTouchEvent);
+            if(mState == BallState.MOVING){ // ball state needed because actionup was being called twice
+                handleReleaseSprite(pSceneTouchEvent);
+                mState = BallState.STOPPED;
+            }
         break;
         case TouchEvent.ACTION_DOWN:
-            baseBoardX = board.getBoardXfromYCoord(getAngleY(this.mY));
-            baseBoardY = board.getBoardYfromXCoord(getAngleX(this.mX));
+            if(mState == BallState.STOPPED){
+                baseBoardX = board.getBoardXfromYCoord(getAngleY(this.mY));
+                baseBoardY = board.getBoardYfromXCoord(getAngleX(this.mX));
+                mState = BallState.MOVING;
+            }
+
         default:
-            this.setPosition(pSceneTouchEvent.getX() - this.getWidth() / 2, pSceneTouchEvent.getY() - this.getHeight() / 2);
+            if(mState == BallState.MOVING){
+                this.setPosition(pSceneTouchEvent.getX() - this.getWidth() / 2, pSceneTouchEvent.getY() - this.getHeight() / 2);
+            }
         break;
         }
         

@@ -1,10 +1,11 @@
 package com.whiterabbit.checkers.ui;
 
-import org.anddev.andengine.entity.sprite.AnimatedSprite;
-import org.anddev.andengine.input.touch.TouchEvent;
-import org.anddev.andengine.opengl.texture.Texture;
-import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
-import org.anddev.andengine.ui.activity.BaseGameActivity;
+
+import org.andengine.entity.sprite.AnimatedSprite;
+import org.andengine.input.touch.TouchEvent;
+import org.andengine.opengl.texture.Texture;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
+import org.andengine.ui.activity.BaseGameActivity;
 
 public class BackArrowSprite extends AnimatedSprite {
 	public interface BackInterface{
@@ -20,8 +21,8 @@ public class BackArrowSprite extends AnimatedSprite {
 	private BackInterface mBack;
 
 	public BackArrowSprite(float pX, float pY, float pWidth, float pHeight,
-			TiledTextureRegion pTextureRegion, Texture pTexture, BaseGameActivity ctx, BackInterface back) {
-		super(pX, pY, pWidth, pHeight, pTextureRegion);
+			TiledTextureRegion pTextureRegion, Texture pTexture, BaseGameActivity ctx,  BackInterface back) {
+		super(pX, pY, pWidth, pHeight, pTextureRegion, ctx.getVertexBufferObjectManager());
 		mTextureRegion = pTextureRegion;
 		mContext = ctx;
 		mBack = back;
@@ -37,7 +38,7 @@ public class BackArrowSprite extends AnimatedSprite {
 		if(pSceneTouchEvent.getAction() != TouchEvent.ACTION_UP)
 			return true;
 				
-        mTextureRegion.setCurrentTileIndex(DISABLED_TILE);
+        setCurrentTileIndex(DISABLED_TILE);
         enabled = false;
 		mBack.onBackArrowPressed();
 	
@@ -52,7 +53,7 @@ public class BackArrowSprite extends AnimatedSprite {
 		mContext.runOnUpdateThread(new Runnable() {
 			@Override
 			public void run() {
-		        mTextureRegion.setCurrentTileIndex(ENABLED_TILE);
+                BackArrowSprite.this.setCurrentTileIndex(ENABLED_TILE);
 			}
 		});
 		
